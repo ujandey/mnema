@@ -133,7 +133,9 @@ jobs:
           out = Path(".benchmark-actions/shard/workers") / f"seed_{seed}_{slug}.json"
           out.write_text(json.dumps(worker, indent=2) + "\n")
           PY
-          CLOUD_OUTPUT="results/github-actions/seed_${SEED}/${METHOD}"
+          OUTPUT_METHOD="$METHOD"
+          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
+          CLOUD_OUTPUT="results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
           mkdir -p "$CLOUD_OUTPUT"
           cp -R "$PAIR"/. "$CLOUD_OUTPUT"/
           cp -R .benchmark-actions/shard/. "$CLOUD_OUTPUT"/
@@ -142,7 +144,7 @@ jobs:
           name: research-shard-${{ matrix.seed }}-${{ matrix.method }}
           path: |
             .benchmark-actions/shard/
-            results/github-actions/seed_${{ matrix.seed }}/${{ matrix.method }}/
+            results/github-actions/seed_${{ matrix.seed }}/
           if-no-files-found: error
           retention-days: 30
           overwrite: true

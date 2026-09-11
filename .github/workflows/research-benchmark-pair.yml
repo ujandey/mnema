@@ -88,13 +88,15 @@ jobs:
           SEED: ${{ inputs.seed }}
           METHOD: ${{ inputs.method }}
         run: |
-          mkdir -p "results/github-actions/seed_${SEED}/${METHOD}"
+          OUTPUT_METHOD="$METHOD"
+          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
+          mkdir -p "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
           cp -R "results/research_benchmark/full/pairs/seed_${SEED}_${METHOD}/". \
-            "results/github-actions/seed_${SEED}/${METHOD}/"
+            "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/"
       - uses: actions/upload-artifact@v4
         with:
           name: research-benchmark-pair-${{ inputs.seed }}-${{ inputs.method }}
-          path: results/github-actions/seed_${{ inputs.seed }}/${{ inputs.method }}/
+          path: results/github-actions/seed_${{ inputs.seed }}/
           if-no-files-found: error
           retention-days: 30
           overwrite: true
