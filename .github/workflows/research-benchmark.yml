@@ -138,7 +138,7 @@ jobs:
           cp -R .benchmark-actions/shard/. "$PAIR"/
       - uses: actions/upload-artifact@v4
         with:
-          name: research-shard-${{ matrix.seed }}-${{ matrix.method }}
+          name: research-seed-${{ matrix.seed }}-${{ matrix.method }}
           path: |
             .benchmark-actions/shard/
             results/github-actions/seed_${{ matrix.seed }}/
@@ -165,7 +165,7 @@ jobs:
           path: .
       - uses: actions/download-artifact@v5
         with:
-          pattern: research-shard-*
+          pattern: research-seed-*
           path: .benchmark-actions/shards
       - name: Validate all results and generate report
         run: >-
