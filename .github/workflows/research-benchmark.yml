@@ -95,10 +95,12 @@ jobs:
           SEED: ${{ matrix.seed }}
           METHOD: ${{ matrix.method }}
         run: |
+          set -o pipefail
+          mkdir -p .benchmark-actions/logs
           python experiments/run_research_benchmark.py \
             --mode full \
             --seed "$SEED" \
-            --method "$METHOD"
+            --method "$METHOD" 2>&1 | tee ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log"
           OUTPUT_METHOD="$METHOD"
           if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
           PAIR="results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
@@ -136,6 +138,8 @@ jobs:
           out.write_text(json.dumps(worker, indent=2) + "\n")
           PY
           cp -R .benchmark-actions/shard/. "$PAIR"/
+          mkdir -p "$PAIR/logs"
+          cp ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log" "$PAIR/logs/"
       - uses: actions/upload-artifact@v4
         with:
           name: research-seed-${{ matrix.seed }}-${{ matrix.method == 'derpp300' && 'derpp' || matrix.method }}

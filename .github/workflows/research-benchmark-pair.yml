@@ -78,11 +78,23 @@ jobs:
         env:
           SEED: ${{ inputs.seed }}
           METHOD: ${{ inputs.method }}
-        run: >-
+        run: |
+          set -o pipefail
+          mkdir -p .benchmark-actions/logs
           python experiments/run_research_benchmark.py
-          --mode full
-          --seed "$SEED"
-          --method "$METHOD"
+            --mode full \
+            --seed "$SEED" \
+            --method "$METHOD" 2>&1 | tee ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log"
+      - name: Include benchmark log in artifact
+        env:
+          SEED: ${{ inputs.seed }}
+          METHOD: ${{ inputs.method }}
+        run: |
+          OUTPUT_METHOD="$METHOD"
+          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
+          mkdir -p "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/logs"
+          cp ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log" \
+            "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/logs/"
       - uses: actions/upload-artifact@v4
         with:
           name: research-seed-${{ inputs.seed }}-${{ inputs.method == 'derpp300' && 'derpp' || inputs.method }}
