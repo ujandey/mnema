@@ -208,7 +208,7 @@ jobs:
         run: cat .benchmark-actions/prepared/summaries/summary_table.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
-          name: research-benchmark-${{ inputs.mode }}
+          name: research-benchmark-final
           path: .benchmark-actions/prepared/
           if-no-files-found: error
           retention-days: 30
