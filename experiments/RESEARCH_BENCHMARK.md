@@ -1,7 +1,7 @@
 # Research benchmark operation
 
 MNEMA and the historical benchmark are frozen. Development validation uses only
-quick mode. Full results do not exist until the full command actually finishes.
+quick mode. The completed full-data report and cloud execution guide are documented in [docs/RESEARCH_BENCHMARK.md](../docs/RESEARCH_BENCHMARK.md).
 
 ## Setup on the stronger computer
 

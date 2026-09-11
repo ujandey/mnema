@@ -81,7 +81,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p .benchmark-actions/logs
-          python experiments/run_research_benchmark.py
+          python experiments/run_research_benchmark.py \
             --mode full \
             --seed "$SEED" \
             --method "$METHOD" 2>&1 | tee ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log"

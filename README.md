@@ -30,39 +30,16 @@ Memory columns are array payload; total = adaptive + fixed + allocated auxiliary
 
 <!-- RESEARCH_BENCHMARK_END -->
 
-### Run the full research benchmark on GitHub Actions
+### Run the research benchmark on GitHub Actions
 
-Open [Actions → Research Benchmark](https://github.com/ujandey/COGNX_2/actions/workflows/research-benchmark.yml),
-select **Run workflow**, choose branch **main** and mode **full**, then click
-the green **Run workflow** button. Pushing the dedicated
-`research-benchmark-run` branch also starts a full run; ordinary pushes to `main`
-do not run this expensive experiment. The **quick** option checks the pipeline
-with reduced data and one seed and is not research evidence.
+The cloud benchmark is manual-only. Open [Actions -> Research Benchmark](https://github.com/ujandey/COGNX_2/actions/workflows/research-benchmark.yml), select **Run workflow**, choose branch **main**, and select one of these modes:
 
-The workflow runs all six methods on seeds 0–9 as **60 independent CPU jobs**, with
-up to ten running concurrently. Each job uses the full training/test data, the
-original hyperparameters, Python 3.11.7 and the pinned
-`experiments/research_requirements.txt` environment. Training within each run
-remains sequential. Preparation shares verified MNIST files, one configuration
-and exact per-seed sample orders with every worker. Each worker records its host
-information under `workers/`; the configuration's host information describes
-the preparation job. No local training or GPU is required.
+- **`smoke/full-seed-0`**: full data for seed 0 across all six methods;
+- **`full-10-seed`**: seeds 0-9 across all six methods, followed by aggregation.
 
-After every job succeeds, the report job checks all 60 result digests, data orders,
-predictions and metrics, then generates plots, tables and the final report. Download
-the **research-benchmark-full** artifact at the bottom of the workflow run page.
-It includes `BENCHMARK_REPORT.md`, `full_results.json`, `validation.json`, raw
-results, sample indices, summaries and plots. The Actions summary also shows the
-main results table. Artifacts are retained for 30 days; download them before expiry.
-Results are not automatically committed to the repository.
+For one full-data seed-method pair, use [Actions -> Research Benchmark Pair](https://github.com/ujandey/COGNX_2/actions/workflows/research-benchmark-pair.yml). The workflow uses the pinned research environment, verified MNIST files, isolated output directories, and independent CPU jobs. It does not run on ordinary pushes.
 
-If a job fails, choose **Re-run failed jobs** in the same workflow run. Successful
-method/seed artifacts remain available and are reused by the report job; an
-interrupted method/seed starts over. Starting a new workflow run repeats the whole
-experiment. A job has a six-hour ceiling, so a pair that exceeds it will need a
-different runner or checkpointing before retrying. GitHub's account concurrency
-and usage limits still apply; see [Actions limits](https://docs.github.com/en/actions/reference/limits)
-and [Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
+Each pair uploads a `research-seed-<seed>-<method>` artifact. The full matrix also uploads `research-benchmark-final`, containing the validated results, tables, plots, and report. See [`docs/RESEARCH_BENCHMARK.md`](docs/RESEARCH_BENCHMARK.md) for the complete protocol, artifact layout, reporting caveats, and the supplied full-data benchmark record.
 
 > **A biologically grounded, event-driven continual learning framework that bounds memory growth, eliminates dense backbone pre-training energy, and operates via sparse address-and-accumulate synaptic dynamics.**
 
