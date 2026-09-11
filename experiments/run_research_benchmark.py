@@ -34,6 +34,7 @@ from mnema.model import MNEMA
 
 METHODS = {"Naive MLP": "naive", "Replay-300 (Research)": "replay300",
            "Replay-64KiB": "replay64kib", "EWC": "ewc", "DER++-300": "derpp300", "MNEMA": "mnema"}
+METHOD_ALIASES = {"replay64k": "replay64kib"}
 MNEMA_PARAMETERS = {"n_in": 784, "n_s": 16384, "k": 64, "d": 10, "budget_bytes": 65536}
 CARD = ROOT / "instrument/tech/asic_45nm.yaml"
 
@@ -162,7 +163,7 @@ def parse_args(argv=None):
     parser.add_argument("--quick", action="store_true", help="Alias for --mode quick (debug only)")
     parser.add_argument("--seeds", type=int, default=None, help="Seeds 0,...,N-1 (default: quick 1, full 10)")
     parser.add_argument("--seed", type=int, default=None, help="Run one seed only; requires --method")
-    parser.add_argument("--method", choices=tuple(METHODS.values()), default=None,
+    parser.add_argument("--method", choices=tuple(METHODS.values()) + tuple(METHOD_ALIASES), default=None,
                         help="Run one method slug only; requires --seed")
     parser.add_argument("--quick-train", type=int, default=100)
     parser.add_argument("--quick-test", type=int, default=100)
@@ -192,6 +193,7 @@ def parse_args(argv=None):
 
 def selected_method(slug):
     """Resolve the stable CLI slug to the existing display name."""
+    slug = METHOD_ALIASES.get(slug, slug)
     return next(method for method, value in METHODS.items() if value == slug)
 
 
@@ -243,11 +245,12 @@ def main(argv=None):
     output = ROOT / "results/research_benchmark" / args.mode
     if args.seed is not None:
         method = selected_method(args.method)
+        output_slug = METHOD_ALIASES.get(args.method, args.method)
         trains, tests, _ = task_indices(data, args.seed, args.mode == "quick",
                                         args.quick_train, args.quick_test)
-        pair_output = output / "pairs" / f"seed_{args.seed}_{args.method}"
+        pair_output = output / "pairs" / f"seed_{args.seed}_{output_slug}"
         atomic_json(pair_output / "config.json", config)
-        atomic_json(pair_output / "raw" / f"seed_{args.seed}_{args.method}.json",
+        atomic_json(pair_output / "raw" / f"seed_{args.seed}_{output_slug}.json",
                     run_one(data, trains, tests, args.seed, method, config))
         atomic_json(pair_output / "status.json", {"status": "complete", "mode": args.mode,
                                                    "seed": args.seed, "method": method,
