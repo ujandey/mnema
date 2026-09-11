@@ -1,4 +1,4 @@
-name: Research benchmark
+name: Research Benchmark
 
 on:
   workflow_dispatch:

@@ -32,9 +32,9 @@ Memory columns are array payload; total = adaptive + fixed + allocated auxiliary
 
 ### Run the full research benchmark on GitHub Actions
 
-Open [Actions → Research benchmark](https://github.com/ujandey/COGNX_2/actions/workflows/research-benchmark.yml),
-select **Run workflow**, and choose **full**. Manual dispatch is available once
-the workflow is on the default branch. Pushing the dedicated
+Open [Actions → Research Benchmark](https://github.com/ujandey/COGNX_2/actions/workflows/research-benchmark.yml),
+select **Run workflow**, choose branch **main** and mode **full**, then click
+the green **Run workflow** button. Pushing the dedicated
 `research-benchmark-run` branch also starts a full run; ordinary pushes to `main`
 do not run this expensive experiment. The **quick** option checks the pipeline
 with reduced data and one seed and is not research evidence.
