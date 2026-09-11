@@ -94,11 +94,45 @@ jobs:
         env:
           SEED: ${{ matrix.seed }}
           METHOD: ${{ matrix.method }}
-        run: >-
-          python experiments/research_actions.py run
-          --directory .benchmark-actions/prepared
-          --output .benchmark-actions/shard
-          --seed "$SEED" --method "$METHOD"
+        run: |
+          python experiments/run_research_benchmark.py \
+            --mode full \
+            --seed "$SEED" \
+            --method "$METHOD"
+          PAIR="results/research_benchmark/full/pairs/seed_${SEED}_${METHOD}"
+          mkdir -p .benchmark-actions/shard/raw .benchmark-actions/shard/workers
+          cp "$PAIR/raw/seed_${SEED}_${METHOD}.json" \
+             ".benchmark-actions/shard/raw/seed_${SEED}_${METHOD}.json"
+          python - "$PAIR" "$SEED" "$METHOD" <<'PY'
+          import json
+          import os
+          import platform
+          import sys
+          from pathlib import Path
+
+          pair, seed, slug = Path(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
+          names = {
+              "naive": "Naive MLP",
+              "replay300": "Replay-300 (Research)",
+              "replay64kib": "Replay-64KiB",
+              "ewc": "EWC",
+              "derpp300": "DER++-300",
+              "mnema": "MNEMA",
+          }
+          result = json.loads((pair / "raw" / f"seed_{seed}_{slug}.json").read_text())
+          worker = {
+              "config_id": result["config_id"],
+              "seed": seed,
+              "method": names[slug],
+              "platform": platform.platform(),
+              "processor": platform.processor(),
+              "machine": platform.machine(),
+              "github_run_id": os.environ.get("GITHUB_RUN_ID"),
+              "github_run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+          }
+          out = Path(".benchmark-actions/shard/workers") / f"seed_{seed}_{slug}.json"
+          out.write_text(json.dumps(worker, indent=2) + "\n")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: research-shard-${{ matrix.seed }}-${{ matrix.method }}
