@@ -1,0 +1,69 @@
+name: Research Benchmark Pair
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: Seed index (0-9)
+        required: true
+        type: string
+        default: '0'
+      method:
+        description: Canonical benchmark method slug
+        required: true
+        type: choice
+        options:
+          - naive
+          - replay300
+          - replay64kib
+          - ewc
+          - derpp300
+          - mnema
+        default: naive
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-benchmark-pair-${{ github.ref }}-${{ inputs.seed }}-${{ inputs.method }}
+  cancel-in-progress: false
+
+env:
+  MPLBACKEND: Agg
+  PYTHONUNBUFFERED: '1'
+  OPENBLAS_NUM_THREADS: '1'
+  OMP_NUM_THREADS: '1'
+  MKL_NUM_THREADS: '1'
+  NUMEXPR_NUM_THREADS: '1'
+
+jobs:
+  benchmark:
+    name: Seed ${{ inputs.seed }} / ${{ inputs.method }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.7'
+          cache: pip
+          cache-dependency-path: experiments/research_requirements.txt
+      - run: python -m pip install -r experiments/research_requirements.txt
+      - name: Validate runner CLI
+        run: python experiments/run_research_benchmark.py --help
+      - name: Run one full-data seed-method pair
+        env:
+          SEED: ${{ inputs.seed }}
+          METHOD: ${{ inputs.method }}
+        run: >-
+          python experiments/run_research_benchmark.py
+          --mode full
+          --seed "$SEED"
+          --method "$METHOD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-benchmark-pair-${{ inputs.seed }}-${{ inputs.method }}
+          path: results/research_benchmark/full/pairs/seed_${{ inputs.seed }}_${{ inputs.method }}/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
