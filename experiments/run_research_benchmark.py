@@ -34,7 +34,7 @@ from mnema.model import MNEMA
 
 METHODS = {"Naive MLP": "naive", "Replay-300 (Research)": "replay300",
            "Replay-64KiB": "replay64kib", "EWC": "ewc", "DER++-300": "derpp300", "MNEMA": "mnema"}
-METHOD_ALIASES = {"replay64k": "replay64kib"}
+METHOD_ALIASES = {"replay64k": "replay64kib", "derpp": "derpp300"}
 MNEMA_PARAMETERS = {"n_in": 784, "n_s": 16384, "k": 64, "d": 10, "budget_bytes": 65536}
 CARD = ROOT / "instrument/tech/asic_45nm.yaml"
 
