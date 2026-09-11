@@ -138,7 +138,7 @@ jobs:
           cp -R .benchmark-actions/shard/. "$PAIR"/
       - uses: actions/upload-artifact@v4
         with:
-          name: research-seed-${{ matrix.seed }}-${{ matrix.method }}
+          name: research-seed-${{ matrix.seed }}-${{ matrix.method == 'derpp300' && 'derpp' || matrix.method }}
           path: |
             .benchmark-actions/shard/
             results/github-actions/seed_${{ matrix.seed }}/

@@ -85,7 +85,7 @@ jobs:
           --method "$METHOD"
       - uses: actions/upload-artifact@v4
         with:
-          name: research-seed-${{ inputs.seed }}-${{ inputs.method }}
+          name: research-seed-${{ inputs.seed }}-${{ inputs.method == 'derpp300' && 'derpp' || inputs.method }}
           path: results/github-actions/seed_${{ inputs.seed }}/
           if-no-files-found: error
           retention-days: 30
