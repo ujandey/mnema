@@ -151,9 +151,10 @@ jobs:
           retention-days: 30
           overwrite: true
 
-  report:
+  aggregate:
     needs: [prepare, benchmark]
     if: inputs.mode == 'full-10-seed'
+    name: Aggregate full benchmark
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
