@@ -83,16 +83,6 @@ jobs:
           --mode full
           --seed "$SEED"
           --method "$METHOD"
-      - name: Stage isolated cloud output
-        env:
-          SEED: ${{ inputs.seed }}
-          METHOD: ${{ inputs.method }}
-        run: |
-          OUTPUT_METHOD="$METHOD"
-          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
-          mkdir -p "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
-          cp -R "results/research_benchmark/full/pairs/seed_${SEED}_${METHOD}/". \
-            "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/"
       - uses: actions/upload-artifact@v4
         with:
           name: research-benchmark-pair-${{ inputs.seed }}-${{ inputs.method }}

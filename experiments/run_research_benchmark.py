@@ -248,7 +248,7 @@ def main(argv=None):
         output_slug = METHOD_ALIASES.get(args.method, args.method)
         trains, tests, _ = task_indices(data, args.seed, args.mode == "quick",
                                         args.quick_train, args.quick_test)
-        pair_output = output / "pairs" / f"seed_{args.seed}_{output_slug}"
+        pair_output = ROOT / "results" / "github-actions" / f"seed_{args.seed}" / output_slug
         atomic_json(pair_output / "config.json", config)
         atomic_json(pair_output / "raw" / f"seed_{args.seed}_{output_slug}.json",
                     run_one(data, trains, tests, args.seed, method, config))

@@ -99,7 +99,9 @@ jobs:
             --mode full \
             --seed "$SEED" \
             --method "$METHOD"
-          PAIR="results/research_benchmark/full/pairs/seed_${SEED}_${METHOD}"
+          OUTPUT_METHOD="$METHOD"
+          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
+          PAIR="results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
           mkdir -p .benchmark-actions/shard/raw .benchmark-actions/shard/workers
           cp "$PAIR/raw/seed_${SEED}_${METHOD}.json" \
              ".benchmark-actions/shard/raw/seed_${SEED}_${METHOD}.json"
@@ -133,12 +135,7 @@ jobs:
           out = Path(".benchmark-actions/shard/workers") / f"seed_{seed}_{slug}.json"
           out.write_text(json.dumps(worker, indent=2) + "\n")
           PY
-          OUTPUT_METHOD="$METHOD"
-          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
-          CLOUD_OUTPUT="results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
-          mkdir -p "$CLOUD_OUTPUT"
-          cp -R "$PAIR"/. "$CLOUD_OUTPUT"/
-          cp -R .benchmark-actions/shard/. "$CLOUD_OUTPUT"/
+          cp -R .benchmark-actions/shard/. "$PAIR"/
       - uses: actions/upload-artifact@v4
         with:
           name: research-shard-${{ matrix.seed }}-${{ matrix.method }}
