@@ -48,6 +48,29 @@ jobs:
           python-version: '3.11.7'
           cache: pip
           cache-dependency-path: experiments/research_requirements.txt
+      - name: Cache MNIST archive files
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: mnist-gz-md5-v1
+      - name: Verify cached MNIST files
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              "train-images-idx3-ubyte.gz": "f68b3c2dcbeaaa9fbdd348bbdeb94873",
+              "train-labels-idx1-ubyte.gz": "d53e105ee54ea40749a09fcbcd1e9432",
+              "t10k-images-idx3-ubyte.gz": "9fb629c4189551a2d022fa330f9573f3",
+              "t10k-labels-idx1-ubyte.gz": "ec29112dd5afa0611ce80d1b7f02629c",
+          }
+          data = Path("data")
+          for name, checksum in expected.items():
+              path = data / name
+              if path.exists() and hashlib.md5(path.read_bytes()).hexdigest() != checksum:
+                  path.unlink()
+          PY
       - run: python -m pip install -r experiments/research_requirements.txt
       - name: Validate runner CLI
         run: python experiments/run_research_benchmark.py --help
