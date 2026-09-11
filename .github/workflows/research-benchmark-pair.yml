@@ -83,10 +83,18 @@ jobs:
           --mode full
           --seed "$SEED"
           --method "$METHOD"
+      - name: Stage isolated cloud output
+        env:
+          SEED: ${{ inputs.seed }}
+          METHOD: ${{ inputs.method }}
+        run: |
+          mkdir -p "results/github-actions/seed_${SEED}/${METHOD}"
+          cp -R "results/research_benchmark/full/pairs/seed_${SEED}_${METHOD}/". \
+            "results/github-actions/seed_${SEED}/${METHOD}/"
       - uses: actions/upload-artifact@v4
         with:
           name: research-benchmark-pair-${{ inputs.seed }}-${{ inputs.method }}
-          path: results/research_benchmark/full/pairs/seed_${{ inputs.seed }}_${{ inputs.method }}/
+          path: results/github-actions/seed_${{ inputs.seed }}/${{ inputs.method }}/
           if-no-files-found: error
           retention-days: 30
           overwrite: true
