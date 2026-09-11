@@ -173,11 +173,37 @@ jobs:
         with:
           pattern: research-seed-*
           path: .benchmark-actions/shards
+      - name: Reconstruct expected result structure
+        run: |
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+
+          source_root = Path(".benchmark-actions/shards")
+          normalized = Path(".benchmark-actions/normalized")
+          normalized.mkdir(parents=True, exist_ok=True)
+          for artifact in sorted(source_root.glob("research-seed-*")):
+              raw_files = sorted(artifact.rglob("raw/seed_*.json"))
+              worker_files = sorted(artifact.rglob("workers/seed_*.json"))
+              if not raw_files or len(worker_files) != 1:
+                  raise SystemExit(f"Unexpected artifact layout: {artifact}")
+              if len({path.name for path in raw_files}) != 1:
+                  raise SystemExit(f"Conflicting raw result names: {artifact}")
+              destination = normalized / artifact.name
+              (destination / "raw").mkdir(parents=True, exist_ok=True)
+              (destination / "workers").mkdir(parents=True, exist_ok=True)
+              shutil.copy2(raw_files[0], destination / "raw" / raw_files[0].name)
+              shutil.copy2(worker_files[0], destination / "workers" / worker_files[0].name)
+          expected = 60
+          actual = len(list(normalized.glob("*/raw/seed_*.json")))
+          if actual != expected:
+              raise SystemExit(f"Expected {expected} reconstructed results, found {actual}")
+          PY
       - name: Validate all results and generate report
         run: >-
           python experiments/research_actions.py collect
           --directory .benchmark-actions/prepared
-          --shards .benchmark-actions/shards
+          --shards .benchmark-actions/normalized
       - name: Display results in Actions summary
         run: cat .benchmark-actions/prepared/summaries/summary_table.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
