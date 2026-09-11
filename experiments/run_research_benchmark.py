@@ -161,6 +161,9 @@ def parse_args(argv=None):
     parser.add_argument("--mode", choices=("quick", "full"), default=None)
     parser.add_argument("--quick", action="store_true", help="Alias for --mode quick (debug only)")
     parser.add_argument("--seeds", type=int, default=None, help="Seeds 0,...,N-1 (default: quick 1, full 10)")
+    parser.add_argument("--seed", type=int, default=None, help="Run one seed only; requires --method")
+    parser.add_argument("--method", choices=tuple(METHODS.values()), default=None,
+                        help="Run one method slug only; requires --seed")
     parser.add_argument("--quick-train", type=int, default=100)
     parser.add_argument("--quick-test", type=int, default=100)
     parser.add_argument("--ewc-lambda", type=float, default=100.0)
@@ -174,6 +177,10 @@ def parse_args(argv=None):
         parser.error("--quick and --mode full conflict")
     args.mode = "quick" if args.quick else (args.mode or "full")
     args.seeds = args.seeds if args.seeds is not None else (1 if args.mode == "quick" else 10)
+    if (args.seed is None) != (args.method is None):
+        parser.error("--seed and --method must be provided together")
+    if args.seed is not None and not 0 <= args.seed < args.seeds:
+        parser.error("--seed must be in the configured seed range")
     if args.seeds < 1 or args.fisher_samples < 0 or args.lr <= 0:
         parser.error("Invalid seed count, Fisher sample count or learning rate")
     if any(not np.isfinite(v) or v < 0 for v in (args.ewc_lambda, args.der_alpha, args.der_beta)) or not np.isfinite(args.lr):
@@ -181,6 +188,11 @@ def parse_args(argv=None):
     if args.mode == "quick" and not (1 <= args.quick_train <= 500 and 1 <= args.quick_test <= 200):
         parser.error("Quick mode permits 1-500 train and 1-200 test examples per task")
     return args
+
+
+def selected_method(slug):
+    """Resolve the stable CLI slug to the existing display name."""
+    return next(method for method, value in METHODS.items() if value == slug)
 
 
 def build_config(args, data):
@@ -229,6 +241,19 @@ def main(argv=None):
     data = load_dataset(ROOT / "data")
     config = build_config(args, data)
     output = ROOT / "results/research_benchmark" / args.mode
+    if args.seed is not None:
+        method = selected_method(args.method)
+        trains, tests, _ = task_indices(data, args.seed, args.mode == "quick",
+                                        args.quick_train, args.quick_test)
+        pair_output = output / "pairs" / f"seed_{args.seed}_{args.method}"
+        atomic_json(pair_output / "config.json", config)
+        atomic_json(pair_output / "raw" / f"seed_{args.seed}_{args.method}.json",
+                    run_one(data, trains, tests, args.seed, method, config))
+        atomic_json(pair_output / "status.json", {"status": "complete", "mode": args.mode,
+                                                   "seed": args.seed, "method": method,
+                                                   "config_id": config["config_id"]})
+        print(f"{config['label']}: finished pair {args.seed} | {method}. Outputs: {pair_output}", flush=True)
+        return
     config_path = output / "config.json"
     if args.force and output.exists():
         archive = output.parent / (args.mode + "_archive_" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f"))
