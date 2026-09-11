@@ -141,12 +141,13 @@ jobs:
           mkdir -p "$PAIR/logs"
           cp ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log" "$PAIR/logs/"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: research-seed-${{ matrix.seed }}-${{ matrix.method == 'derpp300' && 'derpp' || matrix.method }}
           path: |
             .benchmark-actions/shard/
             results/github-actions/seed_${{ matrix.seed }}/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
