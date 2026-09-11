@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Full research (10 seeds) or quick pipeline check (1 seed)
+        description: Select the cloud validation size
+        required: true
         type: choice
-        options: [full, quick]
-        default: full
-  push:
-    branches: [research-benchmark-run]
+        options:
+          - smoke/full-seed-0
+          - full-10-seed
+        default: smoke/full-seed-0
 
 permissions:
   contents: read
@@ -27,10 +28,10 @@ env:
 
 jobs:
   prepare:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
-      matrix: ${{ steps.prepare.outputs.matrix }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -42,9 +43,21 @@ jobs:
       - run: python -m unittest discover -s tests -p 'test_research*.py' -v
       - name: Prepare shared configuration and data order
         id: prepare
+        run: python experiments/research_actions.py prepare --mode full --directory .benchmark-actions/prepared
+      - name: Select requested job matrix
+        id: matrix
         env:
-          MODE: ${{ inputs.mode || 'full' }}
-        run: python experiments/research_actions.py prepare --mode "$MODE" --directory .benchmark-actions/prepared
+          MODE: ${{ inputs.mode }}
+        run: |
+          if [ "$MODE" = "smoke/full-seed-0" ]; then
+            MATRIX='{"seed":[0],"method":["naive","replay300","replay64kib","ewc","derpp300","mnema"]}'
+          elif [ "$MODE" = "full-10-seed" ]; then
+            MATRIX='{"seed":[0,1,2,3,4,5,6,7,8,9],"method":["naive","replay300","replay64kib","ewc","derpp300","mnema"]}'
+          else
+            echo "Unsupported mode: $MODE" >&2
+            exit 1
+          fi
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: research-inputs
@@ -59,7 +72,7 @@ jobs:
   benchmark:
     needs: prepare
     name: Seed ${{ matrix.seed }} / ${{ matrix.method }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
       fail-fast: false
@@ -96,7 +109,8 @@ jobs:
 
   report:
     needs: [prepare, benchmark]
-    runs-on: ubuntu-24.04
+    if: inputs.mode == 'full-10-seed'
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -123,7 +137,7 @@ jobs:
         run: cat .benchmark-actions/prepared/summaries/summary_table.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
-          name: research-benchmark-${{ inputs.mode || 'full' }}
+          name: research-benchmark-${{ inputs.mode }}
           path: .benchmark-actions/prepared/
           if-no-files-found: error
           retention-days: 30
