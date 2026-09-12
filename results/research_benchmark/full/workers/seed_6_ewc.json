@@ -1,0 +1,20 @@
+{
+  "config_id": "ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8",
+  "seed": 6,
+  "method": "EWC",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "machine": "x86_64",
+  "software": {
+    "python": "3.11.7",
+    "numpy": "2.2.6",
+    "matplotlib": "3.10.3",
+    "pyyaml": "6.0.2",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "blas_threads": 1
+  },
+  "github_run_id": "34639900827",
+  "github_run_attempt": "1",
+  "runner_image": "20260907.300.1"
+}

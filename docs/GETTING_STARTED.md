@@ -4,6 +4,10 @@
 
 This guide takes an authorized developer from a checkout to a verified local research environment. All commands assume the repository root as the working directory.
 
+## Read the completed benchmark first
+
+You do not need to install dependencies or rerun training to inspect the [full report](../results/research_benchmark/full/BENCHMARK_REPORT.md), [summary table](../results/research_benchmark/full/summaries/summary_table.md), or [figures](../results/research_benchmark/full/README.md#figures). The imported bundle contains all 60 full-data runs; quick mode below is for development. See [provenance](../results/research_benchmark/full/README.md#provenance-and-reproduction) before attempting to validate or resume the original experiment on the current checkout.
+
 ## Choose an environment
 
 The repository currently has two dependency definitions. Keep them separate.

@@ -2,13 +2,15 @@
 
 [Documentation index](README.md) · [Execution runbook](../experiments/RESEARCH_BENCHMARK.md) · [Artifact guide](../results/README.md)
 
-The research benchmark compares the frozen MNEMA implementation with five dense continual-learning baselines on Split-MNIST. This page defines the comparison and records the separately supplied full-data results. Use the runbook for commands and the saved configuration for a particular run's exact settings.
+The research benchmark compares the frozen MNEMA implementation with five dense continual-learning baselines on Split-MNIST. This page defines the comparison and explains the [completed full-data report](../results/research_benchmark/full/BENCHMARK_REPORT.md). Use the runbook for commands and the saved configuration for a particular run's exact settings.
 
 ## Evidence status
 
-The repository tracks a **reduced, one-seed debug bundle** under [results/research_benchmark/quick](../results/research_benchmark/quick/). A completed full-data bundle was supplied separately in the parent `Desktop/cognx_benchmarking` directory. Its status, validation record, and summary were inspected during this documentation revision; the full experiment was not rerun.
+The primary evidence is the **completed ten-seed full-data bundle** at [results/research_benchmark/full](../results/research_benchmark/full/README.md). All 152 supplied files were copied byte-for-byte from the parent `cognx_benchmarking` folder: report, summaries, figures, raw results, configuration, validation, and worker metadata. [IMPORT_MANIFEST.json](../results/research_benchmark/full/IMPORT_MANIFEST.json) records every original file's size and SHA-256 checksum.
 
-A fresh clone does not include that external bundle. The [full-data table below](#recorded-full-data-results) is a transcription with explicit provenance, not a substitute for the raw evidence. Historical results under `results/` use a different protocol and should not be combined with either research result family.
+The saved record reports 60 completed runs and passing validation. An additional [import audit](../results/research_benchmark/full/IMPORT_VALIDATION.json) checked dataset/stream hashes, saved predictions and metrics, raw/combined agreement, worker identities, and aggregate summaries. No training or inference was rerun. The current runner source differs from the recorded source, and 18 other files differ only in line endings; the source identity caveat remains explicit.
+
+The [one-seed quick bundle](../results/research_benchmark/quick/) remains a debugging record. Historical results under `results/` use a different protocol. Neither is relabeled or combined with full-data evidence.
 
 ## Protocol
 
@@ -100,18 +102,20 @@ The research baselines' training, EWC Fisher estimation, and buffer work do not 
 
 ## Recorded full-data results
 
-The separately supplied bundle records:
+The [imported configuration](../results/research_benchmark/full/config.json) and [validation record](../results/research_benchmark/full/validation.json) identify the completed experiment:
 
 | Provenance field | Recorded value |
 | --- | --- |
 | Status | `complete`; `research_complete: true` |
 | Coverage | 60 seed-method results; seeds 0-9, all six methods |
 | Validation | All 60 saved-artifact checks valid |
+| Configuration created | September 11, 2026, 19:38:47 UTC |
+| Execution | Independent CPU seed-method jobs on GitHub Actions; worker records identify run `34639900827` |
 | Configuration ID | `ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8` |
 | Source commit | `fe86ec1c6abc600dda8ec50565a551af4e5434bd` |
 | Software | Python 3.11.7 / NumPy 2.2.6 / Matplotlib 3.10.3 / PyYAML 6.0.2 |
 
-Values below are transcribed from its `summaries/summary_table.md`. Accuracy and forgetting are mean +/- sample SD over ten seeds. Memory and inference projections shown are the reported means.
+Values below match [summary.json](../results/research_benchmark/full/summaries/summary.json) and the [complete generated table](../results/research_benchmark/full/summaries/summary_table.md). Accuracy and forgetting are mean +/- sample SD over ten seeds. Memory and inference projections shown are the reported means.
 
 | Method | Final ACC (%) | Forgetting (pp) | Resident arrays (bytes) | Projected native inference (microjoules/image) |
 | --- | ---: | ---: | ---: | ---: |
@@ -124,11 +128,13 @@ Values below are transcribed from its `summaries/summary_table.md`. Accuracy and
 
 MNEMA has lower observed forgetting than the other methods in this record, while Replay-300 and DER++-300 have higher final accuracy. MNEMA also allocates substantially more resident array payload than either replay method. The smaller native inference projection must be interpreted within the incomplete counter boundary above.
 
-Retain the external bundle's `config.json`, `status.json`, `validation.json`, `full_results.json`, `raw/`, `workers/`, `summaries/`, and `plots/` together. Without it, a reader can inspect the protocol and debug artifacts but cannot independently audit this full-data table from the clone alone.
+The full report also records **597,911 post-sample FastStore over-budget observations** across the ten MNEMA runs, with a maximum observed active payload of 73,388 bytes. These are post-sample checks, not measurements of transient peak process memory.
+
+All supporting evidence is available in the [full bundle](../results/research_benchmark/full/README.md), including [raw results](../results/research_benchmark/full/raw/), [worker provenance](../results/research_benchmark/full/workers/), and [all six plot families](../results/research_benchmark/full/README.md#figures). Keep these files with their configuration and validation when sharing the results through an authorized channel.
 
 ## GitHub Actions
 
-The included workflows are manual-only (`workflow_dispatch`); ordinary pushes do not launch benchmark jobs. Their configuration is described here from the checked-in YAML, not from a newly executed cloud run.
+The completed bundle records a GitHub Actions execution at its original source revision. The current included workflows are manual-only (`workflow_dispatch`); ordinary pushes do not launch benchmark jobs. The description below refers to today's checked-in YAML, not a newly executed cloud run. The current path mismatch does not invalidate the separately recorded successful run.
 
 | Workflow | Selection | Intended work |
 | --- | --- | --- |

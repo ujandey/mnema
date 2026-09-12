@@ -2,7 +2,7 @@
 
 [Artifact guide](../../README.md) · [Research protocol](../../../docs/RESEARCH_BENCHMARK.md) · [Reproduction commands](../../../experiments/RESEARCH_BENCHMARK.md)
 
-This is the saved **quick-run report**, generated from this directory's JSON. Editorial navigation and context have been added; regenerating the report can replace those additions. Numerical results are unchanged. The separately supplied full-data record is documented in the research protocol and is not contained in this bundle.
+This is the saved **quick-run report**, generated from this directory's JSON. Editorial navigation and context have been added; regenerating the report can replace those additions. Numerical results are unchanged. The [completed full-data record](../full/README.md) is now included in the sibling `full/` directory and is the primary research comparison.
 
 **DEBUG RESULTS ONLY — reduced data, not research evidence. The full ten-seed experiment has NOT been completed by this quick run.**
 

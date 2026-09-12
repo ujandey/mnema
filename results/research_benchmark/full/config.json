@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "mode": "full",
+  "label": "FULL DATA / RESEARCH PROTOCOL",
+  "dataset": "MNIST",
+  "dataset_sha256": {
+    "train-images-idx3-ubyte.gz": "440fcabf73cc546fa21475e81ea370265605f56be210a4024d2ca8f203523609",
+    "train-labels-idx1-ubyte.gz": "3552534a0a558bbed6aed32b30c495cca23d567ec52cac8be1a0730e8010255c",
+    "t10k-images-idx3-ubyte.gz": "8d422c7b0a1c1c79245a5bcf07fe86e33eeafee792b84584aec276f5a2dbc4e6",
+    "t10k-labels-idx1-ubyte.gz": "f7ae60f92e00ec6debd23a6088c31dbd2371eca3ffa0defaefb259924204aec6"
+  },
+  "task_sizes": [
+    {
+      "classes": [
+        0,
+        1
+      ],
+      "full_train": 12665,
+      "full_test": 2115,
+      "train": 12665,
+      "test": 2115
+    },
+    {
+      "classes": [
+        2,
+        3
+      ],
+      "full_train": 12089,
+      "full_test": 2042,
+      "train": 12089,
+      "test": 2042
+    },
+    {
+      "classes": [
+        4,
+        5
+      ],
+      "full_train": 11263,
+      "full_test": 1874,
+      "train": 11263,
+      "test": 1874
+    },
+    {
+      "classes": [
+        6,
+        7
+      ],
+      "full_train": 12183,
+      "full_test": 1986,
+      "train": 12183,
+      "test": 1986
+    },
+    {
+      "classes": [
+        8,
+        9
+      ],
+      "full_train": 11800,
+      "full_test": 1983,
+      "train": 11800,
+      "test": 1983
+    }
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "methods": [
+    "Naive MLP",
+    "Replay-300 (Research)",
+    "Replay-64KiB",
+    "EWC",
+    "DER++-300",
+    "MNEMA"
+  ],
+  "hyperparameters": {
+    "lr": 0.01,
+    "mlp_dimensions": [
+      784,
+      256,
+      10
+    ],
+    "mlp_dtype": "float32",
+    "epochs": 1,
+    "current_batch_size": 1,
+    "replay_batch_size": 1,
+    "replay_policy": "reservoir; sample before insertion; mean current+replay CE",
+    "replay_capacity": 300,
+    "replay_budget_bytes": 65536,
+    "ewc_lambda": 100.0,
+    "fisher_samples": 0,
+    "fisher_type": "per-example empirical diagonal; task-wise snapshots; skip last task",
+    "der_alpha": 0.5,
+    "der_beta": 0.5,
+    "der_loss": "CE(current)+alpha*mean(logit_error^2)+beta*CE(independent replay)",
+    "selection": "Fixed defaults, not tuned using final test set"
+  },
+  "mnema_parameters": {
+    "n_in": 784,
+    "n_s": 16384,
+    "k": 64,
+    "d": 10,
+    "budget_bytes": 65536
+  },
+  "mnema_initial_settings": {
+    "encoder": {
+      "encoder_type": "ttfs",
+      "T": 16,
+      "theta": 0.05,
+      "eta_theta": 0.001,
+      "r_target": 0.15,
+      "x_ref": null
+    },
+    "separator": {
+      "n_in": 784,
+      "n_s": 16384,
+      "fan_in": 8,
+      "k": 64,
+      "reserve_frac": 0.1,
+      "eta_homeo": 0.001,
+      "f_target": 0.004,
+      "n_active_pool": 14745,
+      "indices": {
+        "shape": [
+          16384,
+          8
+        ],
+        "dtype": "int32"
+      },
+      "theta": {
+        "shape": [
+          16384
+        ],
+        "dtype": "float32"
+      },
+      "running_rate": {
+        "shape": [
+          16384
+        ],
+        "dtype": "float32"
+      }
+    },
+    "store": {
+      "n_s": 16384,
+      "d": 10,
+      "eta_f": 1,
+      "s_max": 255,
+      "tau_f": 5000,
+      "theta_novel": 0.15,
+      "budget_bytes": 65536,
+      "M": {
+        "shape": [
+          16384,
+          10
+        ],
+        "dtype": "int16"
+      },
+      "s": {
+        "shape": [
+          16384
+        ],
+        "dtype": "float32"
+      },
+      "tau": {
+        "shape": [
+          16384
+        ],
+        "dtype": "uint32"
+      },
+      "t_clock": 0
+    },
+    "cortex": {
+      "in_features": 16384,
+      "hidden_dim": 256,
+      "out_dim": 10,
+      "dt": 0.001,
+      "alpha": 0.951229424500714,
+      "rho": 0.9950124791926823,
+      "v_th": 1.0,
+      "beta": 1.8,
+      "rho_e": 0.9,
+      "eta": 0.001,
+      "syn_fc": {
+        "in_features": 16384,
+        "out_features": 10,
+        "m": 4,
+        "g0": 0.1,
+        "C": {
+          "shape": [
+            4
+          ],
+          "dtype": "float32"
+        },
+        "g": {
+          "shape": [
+            3
+          ],
+          "dtype": "float32"
+        },
+        "u": {
+          "shape": [
+            4,
+            10,
+            16384
+          ],
+          "dtype": "float32"
+        }
+      },
+      "v": {
+        "shape": [
+          10
+        ],
+        "dtype": "float32"
+      },
+      "b": {
+        "shape": [
+          10
+        ],
+        "dtype": "float32"
+      },
+      "eligibility": {
+        "shape": [
+          10,
+          16384
+        ],
+        "dtype": "float32"
+      }
+    },
+    "readout": {
+      "a1": 2.0,
+      "a2": 1.0,
+      "a3": 1.0
+    },
+    "controller": {
+      "nu_thresh": 0.15,
+      "phi_thresh": 50.0,
+      "bus": {
+        "nu": 0.0,
+        "delta": 0.0,
+        "sigma": 0.0,
+        "phi": 0.0
+      }
+    },
+    "consolidator": {
+      "n_replay": 64,
+      "prio_alpha": 0.6,
+      "salience_decrement": 2
+    }
+  },
+  "source_sha256": {
+    "baselines/derpp.py": "afdb1a72325235077889c83574f7ed1fe58b0b75d867afa898c79e3ad8db082e",
+    "baselines/ewc.py": "8add254f0a38f7eb6340e5c657dedfaece730adfab7904227d5f672419f2bb43",
+    "baselines/mlp.py": "664ce893d6b16266de41f71834af89c1e011b6d059790eda2888175d4895b15c",
+    "baselines/research_mlp.py": "052c7e1c5b2d8eddca3114e68cce14a32f284caf7b91f46e9e76f376a3a028c2",
+    "baselines/research_replay.py": "c30afad7ed83b648f1a329baf34cf75fb2cc75050f80277c8d386a57d15459df",
+    "benchmarks/research_split_mnist.py": "c87cf5f19c3d1e2a6178c2fe8bf850f6cd8f4f92214beb18f8e0e1982a1f8067",
+    "benchmarks/split_mnist.py": "1cb5353c805792b79e81961de3e720ac1664f2e13c60357831858a93c035e048",
+    "experiments/plot_research_benchmark.py": "40ad3226f91348f9cb602a440bec8b9e3f8c1e57d566e4cc0ef62a6182b59224",
+    "experiments/report_research_benchmark.py": "c70b92669ee897fb511f952be6edb7b0764d183663fe2deabe82b57636af2d48",
+    "experiments/research_actions.py": "67f7c72c97bebef5260c88826527321d130707609d7c7bc9050e89e3bf1ac24b",
+    "experiments/research_memory.py": "3e8f7afd831f9893a5066d8d4b596ac6e54d3d0e1374908f354404d0420134c9",
+    "experiments/research_results.py": "3cc5ce802b3c5c065f73a06546ce6d9f8ffe93c09775943fdf0ddb4a88f7139d",
+    "experiments/research_state.py": "351c9639047dbd9127508ff4b65f4012b4d567bd0b9b42ddb8ea2bb5a048409c",
+    "experiments/run_research_benchmark.py": "524306447aacad95b4eebc6b1ceef88fc75c5dbf60d8257b4d43e0c84880ee7b",
+    "experiments/validate_research_benchmark.py": "e2b7621fe32cf35c88bed289192d6ba7959813c8eaa85edb67658badd38fda48",
+    "instrument/__init__.py": "a5bf798cab70e4f53da4832d767ea06b2d403850362687964edbd35ce9ed19b0",
+    "instrument/counters.py": "5644abf80e304ab9fcc6e165dec43e659aa8ff9ad4b77167e45f86784cac0f58",
+    "instrument/tech/asic_45nm.yaml": "50dba94b1c4c32eece061cfd9dbe45110012d4cfc28da82894929f7efeb57a0d",
+    "instrument/tech/loihi2.yaml": "73543a6b987a7195a3328d264b78f78cc302f16a5714ef84175d0d9a8258925a",
+    "instrument/tech/odin_28nm.yaml": "4f870be49d763e5806d2b22e979fc7a2219d4da71ca9bc614be304613657f8df",
+    "mnema/__init__.py": "a5bf798cab70e4f53da4832d767ea06b2d403850362687964edbd35ce9ed19b0",
+    "mnema/consolidate.py": "4a99c9b62c6a38255a1806fe44861737ff7205c6109b1c4f100cdb44ee0d9ebf",
+    "mnema/cortex.py": "125458016ed5a54ebabf0ec7815580cc271e1d2f0a2ae8a03e3aa94d59d91263",
+    "mnema/encoder.py": "0de96f01b57ac6a2f5233de920573105c962a5f3b2262bdd4d9301fb58f0c4e1",
+    "mnema/model.py": "a998ddaacb48920dcb0bd71f2202f0fea5713681caa88c3c48e2172ef1bbc6d5",
+    "mnema/modulators.py": "3c8717badbff7e0116d54f6345da1a71b84651d91499871a208833ce1430a2d5",
+    "mnema/readout.py": "106068ab3a0a214dc573034723486e6e13ba4b80ce4a8803870475aea9a6f773",
+    "mnema/separator.py": "e5ab09fc6cca414ef704e00eb96d96df507838c249a09fde32a16d2e4b26c3ac",
+    "mnema/store.py": "9b3a2aae0b75246460a70515d1aa25082cd8f1909cde027a62da230d042e83d2"
+  },
+  "software": {
+    "python": "3.11.7",
+    "numpy": "2.2.6",
+    "matplotlib": "3.10.3",
+    "pyyaml": "6.0.2",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "blas_threads": 1
+  },
+  "protocol": {
+    "class_il": true,
+    "output_classes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "task_id_at_inference": false,
+    "evaluation": "Each image from identical trained checkpoint; all five tasks at each checkpoint",
+    "forgetting": "mean_j=0..3(max_t=j..3 R[t,j] - R[4,j]); negative allowed",
+    "seed_stream": "default_rng(SeedSequence([seed,101])); generated once per seed",
+    "quick_selection": "first N of shuffled training stream; fixed random test subset seed 2026",
+    "memory": "Unique resident NumPy array payload; excludes Python objects, PRNG internals, dataset and scratch. Buffer counters included.",
+    "faststore_monitor": "after every external training sample; peaks do not include transient within-step occupancy"
+  },
+  "config_id": "ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8",
+  "created_utc": "2026-09-11T19:38:47.232647+00:00",
+  "git_commit": "fe86ec1c6abc600dda8ec50565a551af4e5434bd"
+}

@@ -1,5 +1,7 @@
 # COGNX / MNEMA: historical results and diagnostic tables
 
+For the completed ten-seed research comparison, use the [full benchmark report](research_benchmark/full/BENCHMARK_REPORT.md) and [summary table](research_benchmark/full/summaries/summary_table.md). The tables below remain historical records and have not been replaced with full-data numbers.
+
 > **PROPRIETARY AND CONFIDENTIAL - Copyright (c) 2026 COGNX. All Rights Reserved.**
 > Not for redistribution. These results may not be published or presented outside COGNX
 > without prior written consent. See [LICENSE](../LICENSE).

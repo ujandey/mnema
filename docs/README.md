@@ -4,6 +4,8 @@
 
 This documentation describes the code and artifacts in this checkout. Start with the task you need to complete; experiment settings and saved JSON take precedence over narrative summaries when reproducing a run.
 
+**Full benchmark complete:** start with the [full-data report and evidence](../results/research_benchmark/full/README.md), covering all 60 runs across six methods and ten seeds. The bundle includes the original report, plots, raw records, validation, and an additional import audit.
+
 ## Learn and install
 
 | Guide | What you will learn |
@@ -17,7 +19,8 @@ This documentation describes the code and artifacts in this checkout. Start with
 
 | Guide | What it covers |
 | --- | --- |
-| [Research protocol and results](RESEARCH_BENCHMARK.md) | Dataset, methods, metrics, evaluation isolation, cloud execution, and the separate full-data record |
+| [Research protocol and results](RESEARCH_BENCHMARK.md) | Dataset, methods, metrics, evaluation isolation, cloud execution, and the completed full-data record |
+| [Full benchmark evidence](../results/research_benchmark/full/README.md) | Original report, all six plot families, summaries, validation, and source provenance |
 | [Benchmark runbook](../experiments/RESEARCH_BENCHMARK.md) | Exact commands, CLI defaults, resume behavior, and regeneration |
 | [Experiment catalog](../experiments/README.md) | Diagnostic scripts, outputs, and historical versus research scope |
 | [Result artifact guide](../results/README.md) | Provenance, artifact layout, generated files, and accounting caveats |

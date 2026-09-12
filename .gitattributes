@@ -1,0 +1,2 @@
+# Preserve the supplied benchmark evidence and its recorded file checksums.
+results/research_benchmark/full/** -text

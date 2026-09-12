@@ -2,12 +2,13 @@
 
 [Project overview](../README.md) · [Research protocol](../docs/RESEARCH_BENCHMARK.md) · [Runbook](../experiments/RESEARCH_BENCHMARK.md)
 
-This directory contains **research debug artifacts and historical experiments**. It does not contain the separately supplied full-data ten-seed bundle. The [recorded full-data results](../docs/RESEARCH_BENCHMARK.md#recorded-full-data-results) identify that bundle and its configuration.
+This directory contains the **completed full-data research benchmark**, the earlier debug bundle, and historical experiments. Start with the [full report and evidence index](research_benchmark/full/README.md): all 60 seed-method runs are complete, and the supplied records passed saved-artifact consistency checks. The original bundle was imported from the parent `cognx_benchmarking` folder without changing its files.
 
 ## Choose the correct evidence
 
 | Family | Scope | Primary entry point |
 | --- | --- | --- |
+| Research full | Six methods; seeds 0-9; all 60,000 train / 10,000 test images; isolated checkpoint evaluation | [Full report](research_benchmark/full/BENCHMARK_REPORT.md), [summary](research_benchmark/full/summaries/summary.json), [import audit](research_benchmark/full/IMPORT_VALIDATION.json) |
 | Research quick | Six methods; seed 0; 100 train / 100 test images per task; isolated checkpoint evaluation | [Debug report](research_benchmark/quick/BENCHMARK_REPORT.md) |
 | Historical benchmark | Three methods; 80 train / 50 test images per task; older evaluation semantics | [benchmark_results.json](benchmark_results.json) and [historical tables](ALL_TABLES.md) |
 | Historical diagnostics | Focused footprint, geometry, acquisition, variability, and counter probes | Individual JSON files below |
@@ -16,7 +17,7 @@ This directory contains **research debug artifacts and historical experiments**.
 
 ## Research bundle layout
 
-Paths below are relative to a completed mode directory such as `research_benchmark/quick/`.
+Paths below are relative to a completed mode directory such as `research_benchmark/full/`. The full bundle includes all listed standard artifacts, 60 worker records, and an [evidence index](research_benchmark/full/README.md).
 
 | Path | Contents | How to use it |
 | --- | --- | --- |
@@ -33,8 +34,10 @@ Paths below are relative to a completed mode directory such as `research_benchma
 | `plots/` | PNG/PDF accuracy, forgetting, memory trade-offs, retention, progress | Keep the experiment label with exported figures |
 | `validation.json` | Saved-artifact checks, optionally quick reproduction | Distinguish checking artifacts from rerunning training |
 | `workers/` | Distributed-worker provenance, when collected through that path | Trace the origin of a distributed result |
+| `IMPORT_MANIFEST.json` | Original file sizes and SHA-256 hashes for the imported full bundle | Verify byte-for-byte preservation of the supplied evidence |
+| `IMPORT_VALIDATION.json` | Additional saved-artifact audit and current-source differences | Distinguish data consistency from reproduction on the current checkout |
 
-The quick bundle additionally contains [EWC_SANITY_CHECK.md](research_benchmark/quick/EWC_SANITY_CHECK.md), [ewc_sanity.json](research_benchmark/quick/ewc_sanity.json), and a development validation record. These document a diagnostic run, not a new tuned EWC result.
+The quick bundle additionally contains [EWC_SANITY_CHECK.md](research_benchmark/quick/EWC_SANITY_CHECK.md), [ewc_sanity.json](research_benchmark/quick/ewc_sanity.json), and a development validation record. These document a diagnostic run, not a new tuned EWC result or a full-data EWC reproduction.
 
 ## Read numbers correctly
 
@@ -66,5 +69,7 @@ Historical tables/CSVs include obsolete descriptions of cortex state as fixed, r
 ## Regeneration and preservation
 
 Use the [runbook](../experiments/RESEARCH_BENCHMARK.md#regenerate-reports-and-plots) to regenerate a research bundle. Plot/report generators replace derived files. `export_tables.py` replaces historical Markdown/CSV and can restore superseded prose: it remains unchanged as part of the historical source record. Editorial context in generated snapshots may be overwritten, so retain this guide and the research protocol alongside exports.
+
+The supplied full bundle is an immutable evidence snapshot: its original report and figures are retained verbatim, including historical reproduction wording. Read its [current provenance notes](research_benchmark/full/README.md#provenance-and-reproduction) before validating or regenerating it. Regenerate working copies when needed; changing imported files will no longer match `IMPORT_MANIFEST.json`. The full-bundle Git attribute disables line-ending conversion so original file hashes survive checkout.
 
 Do not hand-edit raw results, digests, predictions, or measured values. Preserve complete bundles, including validation and source identifiers. A local all-method `--force` run archives its old mode directory; individual pair commands overwrite their pair files directly. Publication and redistribution remain subject to the [license](../LICENSE).

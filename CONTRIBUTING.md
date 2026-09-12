@@ -55,6 +55,7 @@ Run the full protocol only when the change requires new full-data evidence and t
 - Use repository-relative links, UTF-8 Markdown, language-tagged code fences, and explicit output paths.
 - Give a command's prerequisites, side effects, and success condition. Distinguish seed indices from seed counts, full data from debug subsets, and validation from reproduction.
 - Link numerical claims to a result bundle and retain mode, sample counts, seed count, units, uncertainty, and accounting boundaries.
+- Use the [completed full bundle](results/research_benchmark/full/README.md) as the primary Split-MNIST evidence. Preserve imported files and their checksums; place current-source audit notes alongside the original record. Keep quick and historical numbers labeled by their own protocols.
 - Keep the `RESEARCH_BENCHMARK_START` / `RESEARCH_BENCHMARK_END` markers intact. The report generator replaces only that block when explicitly requested.
 - Treat generated Markdown/CSV as derived views. Curated context belongs in the result guide and protocol; generators can overwrite editorial notes in snapshots.
 

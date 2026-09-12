@@ -4,6 +4,12 @@
 
 Run all commands from the repository root using the [Python 3.11.7 research environment](../docs/GETTING_STARTED.md). Select a workload explicitly: omitting both `--mode` and `--quick` selects **full data and ten seeds**.
 
+## Existing full-data evidence
+
+The [completed full bundle](../results/research_benchmark/full/README.md) is included at `results/research_benchmark/full/`: all 60 runs, original reports/plots, raw predictions, validation, and worker metadata. Reading those files requires no training run. An import audit verified the saved artifacts without executing the models.
+
+The current runner differs from the original source, with additional CRLF/LF differences in 18 source files. Standard source validation and resume will therefore reject the imported bundle in this checkout. Preserve it as evidence. A fresh current-source experiment must use a separate checkout/output context or deliberately archive it with the all-method `--force` option described below.
+
 ## Quick run
 
 ```bash
@@ -18,7 +24,7 @@ Defaults: seed 0, all six methods, 100 training / 100 test images per task. Outp
 python experiments/run_research_benchmark.py --mode full --seeds 10
 ```
 
-Runs all 60 pairs sequentially and writes `results/research_benchmark/full/`. The full protocol uses all 60,000 training and 10,000 test images; it can take substantial CPU time, particularly for MNEMA and EWC. Runtime depends on the host. There is no local process or seed parallelism in this command.
+Runs all 60 pairs sequentially and writes `results/research_benchmark/full/`. This path already contains the imported full record, so first address the preservation and source-matching requirements above. The full protocol uses all 60,000 training and 10,000 test images; it can take substantial CPU time, particularly for MNEMA and EWC. Runtime depends on the host. There is no local process or seed parallelism in this command.
 
 ## Resume and fresh runs
 
@@ -89,7 +95,7 @@ The first command checks saved artifact consistency and writes `validation.json`
 python experiments/validate_research_benchmark.py results/research_benchmark/full
 ```
 
-`--reproduce` is rejected for full runs. A validator failure from changed source is a provenance mismatch, not permission to bypass hashes or overwrite the saved configuration. Use a checkout matching the record to audit old evidence.
+`--reproduce` is rejected for full runs. The full validation command above requires a checkout matching the record; it will fail the source check for the imported bundle on the current checkout. Its [IMPORT_VALIDATION.json](../results/research_benchmark/full/IMPORT_VALIDATION.json) documents the separate saved-artifact consistency checks. A validator failure from changed source is a provenance mismatch, not permission to bypass hashes or overwrite the saved configuration.
 
 The [EWC diagnostic](check_ewc_sanity.py) checks the saved quick run's Fisher, snapshots, and actual penalty updates:
 
@@ -101,22 +107,23 @@ It writes `EWC_SANITY_CHECK.md` and `ewc_sanity.json`. Functional checks do not 
 
 ## Regenerate reports and plots
 
-Given a completed compatible bundle:
+Create a fresh working copy before regenerating the imported full bundle. The following commands preserve the original files and checksums; the preview directory is ignored by Git and the copy step refuses to overwrite an existing preview:
 
 ```bash
-python experiments/plot_research_benchmark.py results/research_benchmark/quick
-python experiments/report_research_benchmark.py results/research_benchmark/quick
+python -c "from pathlib import Path; import shutil; preview = Path('.benchmark-actions/report-preview/full'); assert not preview.exists(), 'Preview already exists'; shutil.copytree('results/research_benchmark/full', preview)"
+python experiments/plot_research_benchmark.py .benchmark-actions/report-preview/full
+python experiments/report_research_benchmark.py .benchmark-actions/report-preview/full
 ```
 
-Use the `full` directory for full-data outputs. Plotting writes PNG/PDF figures. Reporting writes `BENCHMARK_REPORT.md`, summary Markdown/CSV, and `summaries/README_SECTION.md` from saved JSON; it does not retrain models or validate the run for you.
+Use a separate quick working copy only for debug outputs. Plotting writes PNG/PDF figures. Reporting writes `BENCHMARK_REPORT.md`, summary Markdown/CSV, and `summaries/README_SECTION.md` from saved JSON; it does not retrain models or validate the run for you. These commands replace derived files in the preview directory.
 
 To replace the marked research block in the root README as well:
 
 ```bash
-python experiments/report_research_benchmark.py results/research_benchmark/quick --update-readme
+python experiments/report_research_benchmark.py .benchmark-actions/report-preview/full --update-readme
 ```
 
-Inspect the resulting diff before retaining it. Generated README fragments use repository-root-relative links and assume the conventional `results/research_benchmark/<mode>/` layout. Regenerating from an external or distributed directory requires checking those links. Keep the start/end markers in the root README intact.
+The root README now presents the completed full-data results. Inspect the resulting diff before retaining it; a quick fragment would replace that primary comparison with debug numbers. Generated README fragments use repository-root-relative links and assume the conventional `results/research_benchmark/<mode>/` layout. For this full-data preview, they point to the preserved full bundle. If you change the underlying data or use another layout, check those links. Keep the start/end markers in the root README intact.
 
 Generated files can contain legacy wording. The curated [artifact guide](../results/README.md) and [protocol](../docs/RESEARCH_BENCHMARK.md) explain the accounting boundaries and corrections; editorial notes added to generated snapshots can be overwritten by regeneration.
 

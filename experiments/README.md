@@ -4,6 +4,8 @@
 
 Run scripts from the repository root using the [research environment](../docs/GETTING_STARTED.md). The research runner, historical experiments, and focused diagnostics answer different questions; use the table below to choose an entry point.
 
+The full-data experiment has already completed. Its [report, summaries, and plots](../results/research_benchmark/full/README.md) are available without running any script. The current source differs from the original run's manifest; consult the provenance notes before attempting reproduction or regeneration.
+
 ## Research workflow
 
 | Script | Purpose | Outputs or side effects |

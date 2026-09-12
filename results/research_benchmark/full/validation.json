@@ -1,0 +1,309 @@
+{
+  "mode": "full",
+  "config_id": "ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8",
+  "full_run_executed_by_validator": false,
+  "checks": [
+    {
+      "seed": 0,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 0,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 0,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 0,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 0,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 0,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 1,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 2,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 3,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 4,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 5,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 6,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 7,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 8,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "Naive MLP",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "Replay-300 (Research)",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "Replay-64KiB",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "EWC",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "DER++-300",
+      "saved_artifacts_valid": true
+    },
+    {
+      "seed": 9,
+      "method": "MNEMA",
+      "saved_artifacts_valid": true
+    }
+  ],
+  "reproducibility": {},
+  "all_passed": true
+}

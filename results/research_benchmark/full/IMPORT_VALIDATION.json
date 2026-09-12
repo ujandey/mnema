@@ -1,0 +1,102 @@
+{
+  "config_id": "ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8",
+  "scope": "Audit of supplied saved artifacts, not training or inference reproduction. Original validation.json is preserved.",
+  "saved_artifact_checks": {
+    "configuration_digest": true,
+    "full_dataset_checksums": true,
+    "ten_seed_six_method_coverage": true,
+    "saved_indices_match_full_protocol": true,
+    "raw_and_combined_records_agree": true,
+    "result_digests": true,
+    "stored_predictions_match_metrics": true,
+    "evaluation_state_hash_records": true,
+    "final_mnema_reverse_order_check_records": true,
+    "memory_accounting": true,
+    "worker_identity": true,
+    "aggregate_summary": true,
+    "saved_completion_and_validation": true
+  },
+  "saved_artifact_checks_passed": true,
+  "pairs_checked": 60,
+  "training_rerun": false,
+  "inference_rerun": false,
+  "current_source_matches_recorded": false,
+  "source_differences": [
+    {
+      "path": "baselines/mlp.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "benchmarks/split_mnist.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "experiments/report_research_benchmark.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "experiments/research_actions.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "experiments/run_research_benchmark.py",
+      "difference": "content"
+    },
+    {
+      "path": "instrument/__init__.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "instrument/counters.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "instrument/tech/asic_45nm.yaml",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "instrument/tech/loihi2.yaml",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "instrument/tech/odin_28nm.yaml",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/__init__.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/consolidate.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/cortex.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/encoder.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/model.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/modulators.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/readout.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/separator.py",
+      "difference": "line_endings_only"
+    },
+    {
+      "path": "mnema/store.py",
+      "difference": "line_endings_only"
+    }
+  ]
+}
