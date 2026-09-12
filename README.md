@@ -4,7 +4,7 @@
 
 MNEMA is a NumPy research prototype for learning from a sequence of labeled examples. It combines sparse input codes, a fast associative store, and a slower adaptive spiking cortex to study the trade-offs between accuracy, forgetting, memory allocation, and projected inference cost.
 
-The implementation runs on CPU. It includes six-method Split-MNIST experiments, checkpoint-isolated evaluation, operation counters, reproducible result artifacts, and a webcam demonstrator. It does not require pretrained weights or a GPU.
+The implementation runs on CPU. It includes six-method Split-MNIST experiments, checkpoint-isolated evaluation, operation counters, and reproducible result artifacts. It does not require pretrained weights or a GPU.
 
 **Proprietary and confidential.** Copyright (c) 2026 COGNX. All rights reserved. The [license](LICENSE) grants authorized recipients limited permission to view; these instructions are for separately authorized development and execution.
 
@@ -19,7 +19,6 @@ The implementation runs on CPU. It includes six-method Split-MNIST experiments, 
 | Run or reproduce an experiment | [Benchmark runbook](experiments/RESEARCH_BENCHMARK.md) |
 | Assess the evidence | [Results and provenance](results/README.md) |
 | Use the model from Python | [Python API](docs/API.md) |
-| Try the webcam or dashboard | [Demo guide](demo/README.md) |
 | Make a change | [Contributor guide](CONTRIBUTING.md) |
 
 ## Quick start
@@ -114,10 +113,9 @@ Manual GitHub Actions workflows are also included. Read the [cloud execution gui
 | [experiments/](experiments/README.md) | Runners, auditing, validation, plotting, reporting |
 | [tests/](tests/) | Research protocol and distributed artifact integrity checks |
 | [results/](results/README.md) | Debug and historical artifacts |
-| [demo/](demo/README.md) | Webcam interaction and historical-results dashboard |
 | [docs/](docs/README.md) | Setup, architecture, API, protocol, and troubleshooting |
 
-Use the root `main.py` for historical benchmarks and demos. The installed `mnema-arch` command currently prints a greeting; it is not the benchmark CLI.
+Use the root `main.py` for historical benchmarks and plotting. The installed `mnema-arch` command currently prints a greeting; it is not the benchmark CLI.
 
 ## Access and licensing
 

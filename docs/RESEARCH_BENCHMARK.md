@@ -57,7 +57,7 @@ MNEMA's native prediction path changes adaptive state. The research harness wrap
 
 The checkpoint's existing membrane state is preserved rather than zeroed. Full attribute-state hashes are checked before and after each evaluation set. At the final checkpoint, reverse-order test predictions must match image by image. Predictions receive no labels or task identifiers; labels are used afterward for scoring.
 
-This is an evaluation-layer protocol. It does not modify MNEMA's source or imply that the webcam demonstration has stateless inference.
+This is an evaluation-layer protocol. It does not modify MNEMA's source; native inference remains stateful.
 
 ## Metrics
 

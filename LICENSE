@@ -170,7 +170,7 @@ Sections 1, 3, 4, 5, 6, 7, 9, and 10 survive termination.
 ================================================================================
 
 The Software depends on third-party open-source packages, including but not
-limited to NumPy, OpenCV, Matplotlib, PyYAML, and Streamlit. Those packages are
+limited to NumPy, Matplotlib, and PyYAML. Those packages are
 licensed to their respective copyright holders under their own terms, which
 continue to apply to those packages and are not superseded by this License.
 

@@ -21,12 +21,11 @@ This documentation describes the code and artifacts in this checkout. Start with
 | [Benchmark runbook](../experiments/RESEARCH_BENCHMARK.md) | Exact commands, CLI defaults, resume behavior, and regeneration |
 | [Experiment catalog](../experiments/README.md) | Diagnostic scripts, outputs, and historical versus research scope |
 | [Result artifact guide](../results/README.md) | Provenance, artifact layout, generated files, and accounting caveats |
-| [Demo guide](../demo/README.md) | Webcam controls, dashboard input, and known display limitations |
 
 ## Maintain and troubleshoot
 
 - [Contributor guide](../CONTRIBUTING.md): development checks, scientific invariants, and documentation maintenance.
-- [Troubleshooting](TROUBLESHOOTING.md): environment mismatches, dataset errors, resume refusals, missing artifacts, and camera issues.
+- [Troubleshooting](TROUBLESHOOTING.md): environment mismatches, dataset errors, resume refusals, and missing artifacts.
 - [License](../LICENSE): repository access and use terms.
 
 ## Sources of truth

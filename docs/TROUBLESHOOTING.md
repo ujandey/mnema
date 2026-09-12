@@ -11,10 +11,9 @@ Start from the repository root. Capture the exact command and error before chang
 | Python 3.11 fails `pip install .` | Package metadata requires >=3.14. For research, install `experiments/research_requirements.txt` and run scripts directly. |
 | `uv sync` selects Python 3.14 | `.python-version` and `pyproject.toml` define the package environment. Use the standalone research environment for pinned benchmark reproduction. |
 | `ModuleNotFoundError` for NumPy, Matplotlib, or YAML | Install research requirements using the same interpreter that runs the script: `python -m pip install -r experiments/research_requirements.txt`. |
-| Missing `cv2` or `streamlit` | Those belong to the package/demo environment. Follow the [demo setup](GETTING_STARTED.md#set-up-the-interactive-demos). |
 | `mnema-arch` only prints a greeting | The installed console entry point is a placeholder. Use `python main.py` or the research runner directly. |
 | PowerShell rejects `Activate.ps1` | Invoke `.\.venv\Scripts\python.exe` directly; activation is optional. |
-| Technology card or dashboard results not found | The paths are resolved from the working directory. Change to the repository root. |
+| Technology card not found | The path is resolved from the working directory. Change to the repository root. |
 
 Inspect the actual interpreter and package versions:
 

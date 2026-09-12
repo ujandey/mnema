@@ -11,7 +11,7 @@ The repository currently has two dependency definitions. Keep them separate.
 | Environment | Python | Dependencies | Intended use |
 | --- | --- | --- | --- |
 | Research | Tested with **3.11.7** | NumPy 2.2.6, Matplotlib 3.10.3, PyYAML 6.0.2, pinned in [research_requirements.txt](../experiments/research_requirements.txt) | Benchmark reproduction, unit tests, non-GUI diagnostics |
-| Package/demo | **3.14**, selected by [.python-version](../.python-version); metadata requires >=3.14 | [pyproject.toml](../pyproject.toml) and [uv.lock](../uv.lock), including OpenCV and Streamlit | Existing `uv` workflow and interactive demos |
+| Package | **3.14**, selected by [.python-version](../.python-version); metadata requires >=3.14 | NumPy, Matplotlib, and PyYAML via [pyproject.toml](../pyproject.toml) and [uv.lock](../uv.lock) | Existing `uv` workflow for the implementation, historical benchmarks, and plotting |
 
 For comparisons with the supplied full-data record, use the research environment. `uv sync` follows the package metadata; it does not install the research pins. A Python 3.11 environment cannot install the project as a package under the current metadata, but can run its scripts directly from the checkout.
 
@@ -96,18 +96,6 @@ python experiments/validate_research_benchmark.py results/research_benchmark/qui
 ```
 
 Validation checks the saved source manifest, dataset, predictions, metrics, and summaries, then writes `validation.json`. It may download MNIST if the dataset is absent. With `--reproduce`, quick validation also reruns the experiment and checks reproducibility. Full-data automatic reruns are rejected.
-
-## Set up the interactive demos
-
-In a separate checkout/environment using the repository's `uv` configuration:
-
-```bash
-uv sync --locked
-uv run python main.py --demo
-uv run streamlit run demo/dashboard.py
-```
-
-Run the last two commands separately. The webcam needs a graphical desktop and camera access. The dashboard reads historical saved results; it is not connected to the webcam or research runner. See [demo controls and limitations](../demo/README.md).
 
 ## Next steps
 

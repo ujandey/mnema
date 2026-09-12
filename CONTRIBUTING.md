@@ -6,7 +6,7 @@ This guide is for authorized COGNX contributors. It does not grant permission to
 
 ## Development setup
 
-Use the [standalone research environment](docs/GETTING_STARTED.md) for protocol work. Run scripts from the repository root and keep the Python 3.11 research pins separate from the Python 3.14 package/demo environment.
+Use the [standalone research environment](docs/GETTING_STARTED.md) for protocol work. Run scripts from the repository root and keep the Python 3.11 research pins separate from the Python 3.14 package environment.
 
 ```bash
 python -m pip install -r experiments/research_requirements.txt
