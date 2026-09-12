@@ -1,15 +1,12 @@
 [project]
 name = "mnema-arch"
 version = "0.1.0"
-description = "MNEMA: memory-native, event-driven architecture for bounded continual learning at the edge. Proprietary — COGNX."
+description = "MNEMA: memory-native, event-driven architecture for bounded continual learning at the edge."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "Swapnil", email = "swapnil7x@gmail.com" }
-]
-classifiers = [
-    "License :: Other/Proprietary License",
-    "Private :: Do Not Upload",
 ]
 requires-python = ">=3.14"
 dependencies = [

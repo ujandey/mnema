@@ -29,7 +29,7 @@ This documentation describes the code and artifacts in this checkout. Start with
 
 - [Contributor guide](../CONTRIBUTING.md): development checks, scientific invariants, and documentation maintenance.
 - [Troubleshooting](TROUBLESHOOTING.md): environment mismatches, dataset errors, resume refusals, and missing artifacts.
-- [License](../LICENSE): repository access and use terms.
+- [Apache License 2.0](../LICENSE): project license terms.
 
 ## Sources of truth
 

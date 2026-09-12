@@ -8,7 +8,7 @@ The research benchmark compares the frozen MNEMA implementation with five dense 
 
 The primary evidence is the **completed ten-seed full-data bundle** at [results/research_benchmark/full](../results/research_benchmark/full/README.md). All 152 supplied files were copied byte-for-byte from the parent `cognx_benchmarking` folder: report, summaries, figures, raw results, configuration, validation, and worker metadata. [IMPORT_MANIFEST.json](../results/research_benchmark/full/IMPORT_MANIFEST.json) records every original file's size and SHA-256 checksum.
 
-The saved record reports 60 completed runs and passing validation. An additional [import audit](../results/research_benchmark/full/IMPORT_VALIDATION.json) checked dataset/stream hashes, saved predictions and metrics, raw/combined agreement, worker identities, and aggregate summaries. No training or inference was rerun. The current runner source differs from the recorded source, and 18 other files differ only in line endings; the source identity caveat remains explicit.
+The saved record reports 60 completed runs and passing validation. An additional [import audit](../results/research_benchmark/full/IMPORT_VALIDATION.json) checked dataset/stream hashes, saved predictions and metrics, raw/combined agreement, worker identities, and aggregate summaries. No training or inference was rerun. That audit predates the Apache 2.0 migration: it recorded one runner content difference and 18 line-ending differences. Subsequent license-header changes also alter source hashes without changing model behavior; original run identifiers remain preserved.
 
 The [one-seed quick bundle](../results/research_benchmark/quick/) remains a debugging record. Historical results under `results/` use a different protocol. Neither is relabeled or combined with full-data evidence.
 
@@ -130,7 +130,7 @@ MNEMA has lower observed forgetting than the other methods in this record, while
 
 The full report also records **597,911 post-sample FastStore over-budget observations** across the ten MNEMA runs, with a maximum observed active payload of 73,388 bytes. These are post-sample checks, not measurements of transient peak process memory.
 
-All supporting evidence is available in the [full bundle](../results/research_benchmark/full/README.md), including [raw results](../results/research_benchmark/full/raw/), [worker provenance](../results/research_benchmark/full/workers/), and [all six plot families](../results/research_benchmark/full/README.md#figures). Keep these files with their configuration and validation when sharing the results through an authorized channel.
+All supporting evidence is available in the [full bundle](../results/research_benchmark/full/README.md), including [raw results](../results/research_benchmark/full/raw/), [worker provenance](../results/research_benchmark/full/workers/), and [all six plot families](../results/research_benchmark/full/README.md#figures). Keep these files with their configuration and validation when sharing the results, and retain the applicable license and attribution notices.
 
 ## GitHub Actions
 

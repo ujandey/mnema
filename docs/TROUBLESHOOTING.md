@@ -44,7 +44,7 @@ To continue an old experiment, use its matching checkout/environment. To start a
 
 The validator's `Source changed since this run` has the same provenance implication. It can occur with the checked-in quick bundle if the current checkout differs from its recorded manifest. This is separate from a numerical test failure.
 
-For the imported full bundle, the current runner has a different content hash and 18 other files differ only in line endings. Its saved-artifact consistency audit passed, but exact-source validation on this checkout will reject it. Read [the provenance notes](../results/research_benchmark/full/README.md#provenance-and-reproduction); do not change original hashes to make validation pass.
+For the imported full bundle, the import audit recorded one runner content difference and 18 line-ending differences. The later Apache 2.0 migration changes additional source hashes through license-header updates. Its saved-artifact consistency audit passed, but exact-source validation on this checkout will reject it. Read [the provenance notes](../results/research_benchmark/full/README.md#provenance-and-reproduction); do not change original hashes to make validation pass.
 
 ## A run seems unexpectedly large
 
@@ -76,4 +76,4 @@ See [architecture](ARCHITECTURE.md) and [metric/accounting definitions](RESEARCH
 
 ## Useful information for a maintainer
 
-Provide the command, working directory, source commit, Python/dependency versions, traceback or failed test name, mode, and affected artifact's configuration ID. Explain whether you were resuming, validating, regenerating, or starting a fresh run. Share proprietary source and result bundles only through an authorized channel.
+Provide the command, working directory, source commit, Python/dependency versions, traceback or failed test name, mode, and affected artifact's configuration ID. Explain whether you were resuming, validating, regenerating, or starting a fresh run. Keep the relevant configuration and provenance with any shared result bundle.

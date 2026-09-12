@@ -6,7 +6,7 @@ MNEMA is a NumPy research prototype for learning from a sequence of labeled exam
 
 The implementation runs on CPU. It includes six-method Split-MNIST experiments, checkpoint-isolated evaluation, operation counters, and reproducible result artifacts. It does not require pretrained weights or a GPU.
 
-**Proprietary and confidential.** Copyright (c) 2026 COGNX. All rights reserved. The [license](LICENSE) grants authorized recipients limited permission to view; these instructions are for separately authorized development and execution.
+**Licensed under the [Apache License 2.0](LICENSE).** Copyright (c) 2026 COGNX.
 
 [Full benchmark report](results/research_benchmark/full/BENCHMARK_REPORT.md) · [Get started](docs/GETTING_STARTED.md) · [Architecture](docs/ARCHITECTURE.md) · [Documentation index](docs/README.md)
 
@@ -131,6 +131,6 @@ Manual GitHub Actions workflows are also included. Read the [cloud execution gui
 
 Use the root `main.py` for historical benchmarks and plotting. The installed `mnema-arch` command currently prints a greeting; it is not the benchmark CLI.
 
-## Access and licensing
+## License
 
-The [LICENSE](LICENSE) is the authoritative repository notice. Documentation does not grant execution, redistribution, or publication rights. For access or licensing, contact the COGNX representative who supplied the repository; the license's contact fields are currently placeholders. Third-party dependencies retain their own licenses.
+MNEMA's original source code, documentation, and benchmark artifacts are licensed under the [Apache License, Version 2.0](LICENSE). Third-party dependencies and the MNIST dataset retain their respective licenses and terms; the project license does not replace them. See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidance.

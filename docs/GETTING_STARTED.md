@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) · [Troubleshooting](TROUBLESHOOTING.md)
 
-This guide takes an authorized developer from a checkout to a verified local research environment. All commands assume the repository root as the working directory.
+This guide takes a developer from a checkout to a verified local research environment. All commands assume the repository root as the working directory.
 
 ## Read the completed benchmark first
 
@@ -28,7 +28,7 @@ git clone https://github.com/ujandey/COGNX_2.git
 cd COGNX_2
 ```
 
-If you already have an authorized checkout, use it directly. Repository visibility does not replace the [license terms](../LICENSE).
+If you already have a checkout, use it directly. The project is licensed under the [Apache License 2.0](../LICENSE).
 
 ## Set up research dependencies
 

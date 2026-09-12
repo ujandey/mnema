@@ -2,7 +2,7 @@
 
 [Project overview](README.md) · [Documentation index](docs/README.md)
 
-This guide is for authorized COGNX contributors. It does not grant permission to fork, modify, distribute, or publish the software; access and use are governed by [LICENSE](LICENSE) and any applicable written authorization.
+Contributions are welcome under the [Apache License, Version 2.0](LICENSE). Unless explicitly stated otherwise, contributions intentionally submitted for inclusion in MNEMA are provided under that license.
 
 ## Development setup
 
@@ -46,7 +46,7 @@ Task boundaries used by EWC during training and the additional Fisher pass are p
 | Instrument changes | Unit tests plus `python experiments/e0_calibrate.py` and the applicable arithmetic diagnostic |
 | End-to-end integration | Explicit quick run in a fresh or deliberately archived mode directory; validate that bundle |
 
-Run the full protocol only when the change requires new full-data evidence and the run is authorized. Do not use a 60-pair experiment as a routine documentation check. Do not run historical exporters or benchmarks incidentally; they overwrite tracked outputs.
+Run the full protocol only when the change requires new full-data evidence and you have the necessary compute resources. Do not use a 60-pair experiment as a routine documentation check. Do not run historical exporters or benchmarks incidentally; they overwrite tracked outputs.
 
 ## Maintain documentation
 
@@ -59,7 +59,7 @@ Run the full protocol only when the change requires new full-data evidence and t
 - Keep the `RESEARCH_BENCHMARK_START` / `RESEARCH_BENCHMARK_END` markers intact. The report generator replaces only that block when explicitly requested.
 - Treat generated Markdown/CSV as derived views. Curated context belongs in the result guide and protocol; generators can overwrite editorial notes in snapshots.
 
-Do not invent contact details, performance guarantees, hardware support, or stable APIs. Legal ownership/contact placeholders in the license need authoritative owner input; documentation edits should not silently rewrite the license.
+Do not invent contact details, performance guarantees, hardware support, or stable APIs. Preserve copyright attributions and keep license notices consistent with the root Apache 2.0 license.
 
 ## Prepare a reviewable change
 

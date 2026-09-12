@@ -8,7 +8,7 @@ Run all commands from the repository root using the [Python 3.11.7 research envi
 
 The [completed full bundle](../results/research_benchmark/full/README.md) is included at `results/research_benchmark/full/`: all 60 runs, original reports/plots, raw predictions, validation, and worker metadata. Reading those files requires no training run. An import audit verified the saved artifacts without executing the models.
 
-The current runner differs from the original source, with additional CRLF/LF differences in 18 source files. Standard source validation and resume will therefore reject the imported bundle in this checkout. Preserve it as evidence. A fresh current-source experiment must use a separate checkout/output context or deliberately archive it with the all-method `--force` option described below.
+The import audit recorded one runner content difference and CRLF/LF differences in 18 source files. Later Apache 2.0 license-header updates also change source hashes without changing model behavior. Standard source validation and resume will therefore reject the imported bundle in this checkout. Preserve it as evidence. A fresh current-source experiment must use a separate checkout/output context or deliberately archive it with the all-method `--force` option described below.
 
 ## Quick run
 
