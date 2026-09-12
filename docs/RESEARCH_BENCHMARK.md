@@ -1,124 +1,119 @@
-# Research Benchmark Documentation
+# Research benchmark: protocol, results, and provenance
 
-This document is the operating and reporting record for the full research benchmark. It describes the frozen experiment, the GitHub Actions execution path, the result artifacts, and the supplied completed report bundle.
+[Documentation index](README.md) · [Execution runbook](../experiments/RESEARCH_BENCHMARK.md) · [Artifact guide](../results/README.md)
 
-## Scope and invariants
+The research benchmark compares the frozen MNEMA implementation with five dense continual-learning baselines on Split-MNIST. This page defines the comparison and records the separately supplied full-data results. Use the runbook for commands and the saved configuration for a particular run's exact settings.
 
-The benchmark compares the existing MNEMA implementation with five continual-learning baselines on full-data Split-MNIST Class-IL. The cloud work adds execution and collection infrastructure only. It does not modify `mnema/`, model behavior, metric definitions, hyperparameters, historical results, or the benchmark protocol.
+## Evidence status
 
-The full protocol uses:
+The repository tracks a **reduced, one-seed debug bundle** under [results/research_benchmark/quick](../results/research_benchmark/quick/). A completed full-data bundle was supplied separately in the parent `Desktop/cognx_benchmarking` directory. Its status, validation record, and summary were inspected during this documentation revision; the full experiment was not rerun.
 
-- five sequential tasks: `01 -> 23 -> 45 -> 67 -> 89`;
-- all 60,000 MNIST training images and all 10,000 test images;
-- all ten output classes during inference, with no task identifier or output masking;
-- one externally presented training stream per seed;
-- seeds `0` through `9`;
-- one independent run for each seed-method pair;
-- NumPy on CPU with one BLAS thread; no GPU or neuromorphic device;
-- Python 3.11.7 and the pinned dependencies in `experiments/research_requirements.txt`.
+A fresh clone does not include that external bundle. The [full-data table below](#recorded-full-data-results) is a transcription with explicit provenance, not a substitute for the raw evidence. Historical results under `results/` use a different protocol and should not be combined with either research result family.
 
-The unit of replication is the seed. Tables report the sample standard deviation across the ten seeds. The benchmark does not claim statistical significance or select a method by tuning against the final test set.
+## Protocol
+
+| Dimension | Full research setting |
+| --- | --- |
+| Dataset | All 60,000 MNIST training images and all 10,000 test images |
+| Task sequence | Five digit pairs: `01 -> 23 -> 45 -> 67 -> 89` |
+| Inference | All ten output classes; no task identifier or output masking |
+| External training | One presentation of each training example, with a task stream shuffled once per seed |
+| Replication | Seeds 0-9, six methods per seed, 60 independent seed-method pairs |
+| Evaluation | All five test tasks at each task checkpoint; all 25 retention cells measured |
+| Compute environment | NumPy on CPU; runner sets BLAS-related thread counts to one |
+| Reference software | Python 3.11.7, NumPy 2.2.6, Matplotlib 3.10.3, PyYAML 6.0.2 |
+| Selection | Fixed defaults, without final-test-set hyperparameter tuning |
+
+Each method receives the same per-seed training order and test indices. Images remain uint8 in shared host arrays and are normalized to float32 per use. Compressed MNIST files are checked against expected MD5 values; their SHA-256 digests are saved in configuration. See [research_split_mnist.py](../benchmarks/research_split_mnist.py).
+
+One external pass does not mean equal computation or strictly one data access: EWC makes additional training-data reads for Fisher estimation; replay methods and MNEMA consolidation perform internal replay.
+
+Quick mode defaults to one seed and 100 train / 100 test images per task. It retains the same model dimensions and explicitly labels results as debug-only.
 
 ## Methods
 
-The canonical method slugs used by the runner and workflows are:
+All dense baselines share a `784 -> 256 ReLU -> 10` float32 MLP, the same initial parameters for a given seed, and SGD with learning rate 0.01. There is no optimizer momentum or pretrained backbone.
 
-| Slug | Reported method |
+| Slug | Report name | Update and auxiliary state |
+| --- | --- | --- |
+| `naive` | Naive MLP | Cross-entropy update on the incoming sample; no replay |
+| `replay300` | Replay-300 (Research) | True 300-item reservoir of uint8 images/labels; one update on mean CE of current plus one prior sample; insertion follows sampling |
+| `replay64kib` | Replay-64KiB | Same policy, with capacity derived from a strict 65,536-byte buffer payload budget including counters; 83 items at these dimensions |
+| `ewc` | EWC | CE plus task-wise diagonal Fisher penalty; lambda 100; parameter snapshots and Fishers from the first four tasks |
+| `derpp300` | DER++-300 | 300-item reservoir containing images, labels, and ten float32 logits captured before the original optimizer update |
+| `mnema` | MNEMA | Frozen model defaults, adaptive sparse representation, FastStore, cortex, and internal sleep consolidation |
+
+The main runner accepts `replay64k` as an alias for `replay64kib`, and `derpp` for `derpp300`. Distributed helper commands use canonical slugs.
+
+EWC uses the mean of squared per-example CE gradients with observed training labels as an empirical diagonal Fisher. The penalty is `lambda / 2` times the sum of Fisher-weighted squared parameter deviations over previous tasks. By default every training sample contributes to each of the first four task Fishers. This pass makes no optimizer updates, and no Fisher is built after the final task.
+
+DER++ uses `CE(current) + 0.5 * mean(logit_error^2) + 0.5 * CE(replayed_label)`. The logit-matching and label-replay terms draw independent prior examples and contribute to one combined update. These coefficients are fixed illustrative defaults, not a claim of optimal tuning.
+
+Historical replay in [baselines/mlp.py](../baselines/mlp.py) instead uses random replacement and different insertion/update ordering. Its numbers do not describe the research reservoir baseline.
+
+## Evaluation isolation
+
+MNEMA's native prediction path changes adaptive state. The research harness wraps each trained checkpoint in [CheckpointInference](../experiments/research_state.py), which restores encoder, separator, cortex, controller, and RNG state after every test image, including when inference raises an exception.
+
+The checkpoint's existing membrane state is preserved rather than zeroed. Full attribute-state hashes are checked before and after each evaluation set. At the final checkpoint, reverse-order test predictions must match image by image. Predictions receive no labels or task identifiers; labels are used afterward for scoring.
+
+This is an evaluation-layer protocol. It does not modify MNEMA's source or imply that the webcam demonstration has stateless inference.
+
+## Metrics
+
+Let `R[t, j]` be accuracy as a fraction on task `j` after training task `t`, with indices 0 through 4.
+
+```text
+Final ACC (%) = 100 * mean(R[4, j] for j = 0,...,4)
+
+Forgetting (pp) = 100 * mean(
+    max(R[t, j] for t = j,...,3) - R[4, j]
+    for j = 0,...,3
+)
+```
+
+Final accuracy is a task-macro average: task test sets differ slightly in size, so it is not pooled sample accuracy. Forgetting excludes pre-learning checkpoints, the final checkpoint from the maximum, and the fifth task. Negative forgetting is allowed when final performance improves beyond the earlier best score.
+
+The unit of statistical replication is the seed. Tables report the mean and sample SD (`ddof=1`), not standard error or a confidence interval. A single seed has undefined SD. Low forgetting should always be read alongside accuracy: a model that learned little may have little to forget. No significance claim follows from these descriptive summaries.
+
+## Memory and energy accounting
+
+### Memory
+
+Measurements count unique persistent NumPy array payloads:
+
+```text
+Total resident arrays = model/adaptive + fixed scaffold + auxiliary allocated
+```
+
+Active auxiliary content is an alternative occupancy view and is **not added again**. Buffer size/seen counters are explicit int64 arrays and are counted. Excluded items include Python object/scalar overhead, PRNG internals, shared data, temporary gradients/Fisher workspace, and evaluation snapshots. These values are not process RSS or peak deployment memory.
+
+For MNEMA, cortex synaptic planes, eligibility traces, neuron state, and separator homeostasis belong to adaptive state. Separator connectivity and synaptic constants belong to fixed scaffold. FastStore's default active row is 28 bytes, while eviction counts 25; its configured 64 KiB budget is therefore not an actual active-payload ceiling. Full allocated FastStore capacity is 458,752 bytes. Active rows do not constitute a demonstrated packed deployment format.
+
+Replay-64KiB's episodic buffer is strictly budgeted, but it is not an exact memory match to MNEMA. Dense model parameters and other state remain additional memory. All research replay buffers have fixed capacities.
+
+### Energy and runtime
+
+Native inference counters are projected using the [ASIC 45 nm card](../instrument/tech/asic_45nm.yaml). Projections omit some arithmetic and traffic terms, plus checkpoint restoration. In particular, the instrument records write counters but its projection formula does not charge writes. Technology cards describe cost assumptions, not executed target devices.
+
+The research baselines' training, EWC Fisher estimation, and buffer work do not have comparable complete energy instrumentation. The report therefore makes **no cross-method end-to-end training-energy ranking**. Native MNEMA training counts remain in raw records. Wall time is measured on the host, including integrity work; it is not measured energy.
+
+## Recorded full-data results
+
+The separately supplied bundle records:
+
+| Provenance field | Recorded value |
 | --- | --- |
-| `naive` | Naive MLP |
-| `replay300` | Replay-300 (Research) |
-| `replay64kib` | Replay-64KiB |
-| `ewc` | EWC |
-| `derpp300` | DER++-300 |
-| `mnema` | MNEMA |
+| Status | `complete`; `research_complete: true` |
+| Coverage | 60 seed-method results; seeds 0-9, all six methods |
+| Validation | All 60 saved-artifact checks valid |
+| Configuration ID | `ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8` |
+| Source commit | `fe86ec1c6abc600dda8ec50565a551af4e5434bd` |
+| Software | Python 3.11.7 / NumPy 2.2.6 / Matplotlib 3.10.3 / PyYAML 6.0.2 |
 
-The runner also accepts `replay64k` as an alias for `replay64kib` and `derpp` as an alias for `derpp300`. The workflow uses canonical slugs.
+Values below are transcribed from its `summaries/summary_table.md`. Accuracy and forgetting are mean +/- sample SD over ten seeds. Memory and inference projections shown are the reported means.
 
-## GitHub Actions workflows
-
-Both workflows are manual-only. They do not run on pushes and are never launched automatically from the local machine.
-
-### Research Benchmark
-
-Open **Actions -> Research Benchmark -> Run workflow** and select a mode:
-
-| Mode | Jobs | Purpose |
-| --- | ---: | --- |
-| `smoke/full-seed-0` | 6 | Full dataset, seed 0, all six methods. Use this as the first cloud validation. |
-| `full-10-seed` | 60 | Seeds 0-9 for all six methods, followed by aggregation. |
-
-The matrix uses `fail-fast: false`, a maximum of six concurrent jobs, and a 350-minute limit per benchmark job. Each job checks out the repository, installs the pinned research dependencies, obtains the verified MNIST files, and runs exactly one full-data seed-method pair.
-
-### Research Benchmark Pair
-
-Use **Actions -> Research Benchmark Pair -> Run workflow** when one full-data pair is needed. Enter a seed from `0` to `9` and select one canonical method slug. This workflow runs one pair and uploads its output without starting the 60-job matrix.
-
-## Command-line equivalent
-
-The pair runner can be invoked locally or by another controlled runner:
-
-```bash
-python experiments/run_research_benchmark.py --mode full --seed 0 --method mnema
-```
-
-`--seed` and `--method` must be supplied together. Omitting both preserves the existing all-method runner behavior. Pair-mode output is isolated under:
-
-```text
-results/github-actions/seed_<seed>/<method>/
-```
-
-The existing all-method output paths under `results/research_benchmark/` are not used by pair mode.
-
-## Data, dependency, and output handling
-
-The preparation job downloads or reuses the four standard MNIST gzip files and verifies their checksums. The prepared configuration and data are uploaded as an input artifact. Matrix jobs download that artifact into their own workspaces, so no job depends on files on a personal computer.
-
-Each pair writes its raw JSON result, worker metadata, and execution log into a unique seed-method directory. The workflow uploads an artifact named:
-
-```text
-research-seed-<seed>-<method>
-```
-
-Examples include `research-seed-0-mnema` and `research-seed-7-derpp`. Artifacts are retained for 30 days by the workflow; download them before expiry.
-
-## Aggregation and reporting
-
-The `aggregate` job runs only for `full-10-seed`. It waits for the matrix, downloads every pair artifact, reconstructs the result layout expected by the existing collection code, and verifies that all 60 raw results are present. It then runs `experiments/research_actions.py collect`.
-
-The existing reporting code generates:
-
-- `summary.json`;
-- `summary_table.md` and `summary.csv`;
-- `BENCHMARK_REPORT.md`;
-- final-accuracy and forgetting plots;
-- accuracy-versus-memory and forgetting-versus-memory plots;
-- retention matrices;
-- continual-learning progress plots;
-- raw results, worker metadata, validation data, and configuration records.
-
-The final bundle is uploaded as `research-benchmark-final`. A failed pair does not cancel other matrix jobs. Review the failed job log and use GitHub's **Re-run failed jobs** action when appropriate.
-
-## Supplied completed benchmark
-
-The completed full-data report bundle supplied with this project is stored outside the repository in the `Desktop\cognx_benchmarking` directory. Its top-level files are:
-
-```text
-BENCHMARK_REPORT.md
-config.json
-full_results.json
-status.json
-validation.json
-plots/
-raw/
-summaries/
-workers/
-```
-
-The recorded status is `complete`, with all 60 seed-method artifacts validated. The report records configuration identifier `ab869e57feea62e93198f72fedde18182dc93a28a72d4875e966067d676027a8`, source commit `fe86ec1c6abc600dda8ec50565a551af4e5434bd`, Python `3.11.7`, NumPy `2.2.6`, Matplotlib `3.10.3`, and PyYAML `6.0.2`.
-
-The reported ten-seed means are:
-
-| Method | Final accuracy (%) | Forgetting (percentage points) | Total resident arrays (bytes) | Projected native inference (microjoules/image) |
+| Method | Final ACC (%) | Forgetting (pp) | Resident arrays (bytes) | Projected native inference (microjoules/image) |
 | --- | ---: | ---: | ---: | ---: |
 | Naive MLP | 19.79 +/- 0.06 | 99.52 +/- 0.12 | 814,120 | 1.768 |
 | Replay-300 (Research) | 82.44 +/- 1.33 | 20.58 +/- 1.62 | 1,049,636 | 1.768 |
@@ -127,17 +122,30 @@ The reported ten-seed means are:
 | DER++-300 | 89.39 +/- 0.60 | 12.12 +/- 0.73 | 1,061,636 | 1.768 |
 | MNEMA | 77.12 +/- 0.87 | 6.53 +/- 1.41 | 4,391,100 | 0.316 |
 
-These values are reported for the frozen implementation and the stated protocol. Projected inference energy is not measured physical energy. Memory values are resident NumPy array payloads under the report's accounting boundary, not process RSS. The report also documents the FastStore row-size accounting discrepancy and the fact that MNEMA's configured 64 KiB FastStore budget is not a true total-memory ceiling.
+MNEMA has lower observed forgetting than the other methods in this record, while Replay-300 and DER++-300 have higher final accuracy. MNEMA also allocates substantially more resident array payload than either replay method. The smaller native inference projection must be interpreted within the incomplete counter boundary above.
 
-## Reproduction and review checklist
+Retain the external bundle's `config.json`, `status.json`, `validation.json`, `full_results.json`, `raw/`, `workers/`, `summaries/`, and `plots/` together. Without it, a reader can inspect the protocol and debug artifacts but cannot independently audit this full-data table from the clone alone.
 
-Before submitting results, retain the report bundle together with its `config.json`, `validation.json`, raw results, plots, and worker metadata. Confirm that:
+## GitHub Actions
 
-1. the run mode is `full`;
-2. seeds `0` through `9` are present for all six methods;
-3. validation reports all 60 saved artifacts as valid;
-4. the configuration identifier and source commit are recorded;
-5. the report's caveats are included wherever results are quoted;
-6. historical small-benchmark results are kept separate from the full-data research results.
+The included workflows are manual-only (`workflow_dispatch`); ordinary pushes do not launch benchmark jobs. Their configuration is described here from the checked-in YAML, not from a newly executed cloud run.
 
-Do not describe projected energy as measured energy, the FastStore configuration as a complete 64 KiB system-memory limit, or the ten-seed means as proof of statistical significance.
+| Workflow | Selection | Intended work |
+| --- | --- | --- |
+| [Research Benchmark](../.github/workflows/research-benchmark.yml) | `smoke/full-seed-0` | Six full-data method jobs for seed 0; no final matrix aggregation |
+| Same workflow | `full-10-seed` | 60 jobs followed by full aggregation |
+| [Research Benchmark Pair](../.github/workflows/research-benchmark-pair.yml) | Seed 0-9 and one canonical method | One full-data pair |
+
+The matrix sets `fail-fast: false`, `max-parallel: 6`, and a 350-minute benchmark-job timeout. Preparation installs the research pins, verifies MNIST, and uploads shared inputs. A failed pair does not cancel other pair jobs; successful aggregation still requires the expected inputs.
+
+**Known workflow path mismatch:** both YAML files translate the `derpp300` directory to `derpp`, but the current Python pair runner writes to `results/github-actions/seed_<seed>/derpp300/`. The matrix then tries to copy from the wrong directory, preventing successful DER++ artifact assembly and full aggregation as written. The pair workflow's log destination is also affected. This documentation revision does not change workflow execution. Align the YAML paths with the runner before relying on the full cloud matrix; the local canonical pair command in the runbook writes to the correct path.
+
+When operating an aligned workflow, open the repository's **Actions** tab, choose the workflow, and select **Run workflow** on the intended source revision. Pair artifact names follow `research-seed-<seed>-<method>`; the YAML currently names DER++ artifacts with `derpp`. The full aggregation artifact is `research-benchmark-final`. Configured retention is 30 days, so download needed bundles before expiry.
+
+The distributed [research_actions.py](../experiments/research_actions.py) helper also provides `prepare`, `run`, and `collect` commands. Its collector requires one unique raw result and matching worker record per expected pair, and verifies source, software, dataset, configuration, and indices. Pair output from the main runner alone is not a complete distributed shard. See the [runbook](../experiments/RESEARCH_BENCHMARK.md#distributed-helper) for a compatible example.
+
+## Limits of the comparison
+
+The experiment covers one dataset, one task order, simple dense baselines, fixed hyperparameters, and a shallow prototype. EWC has training task boundaries and additional Fisher reads; methods have unequal internal computation. Energy is projected, memory is array payload, and exact cross-platform floating-point equivalence is not guaranteed.
+
+Historical evaluation let test inputs alter MNEMA state, left unmeasured future retention cells as zero, and used a different forgetting maximum. Dataset size, order, replay policy, and evaluation all changed between historical and research protocols. Differences in their scores cannot be attributed solely to an improvement in MNEMA.

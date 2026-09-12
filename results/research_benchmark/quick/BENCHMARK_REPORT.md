@@ -1,5 +1,9 @@
 # MNEMA Continual-Learning Benchmark
 
+[Artifact guide](../../README.md) · [Research protocol](../../../docs/RESEARCH_BENCHMARK.md) · [Reproduction commands](../../../experiments/RESEARCH_BENCHMARK.md)
+
+This is the saved **quick-run report**, generated from this directory's JSON. Editorial navigation and context have been added; regenerating the report can replace those additions. Numerical results are unchanged. The separately supplied full-data record is documented in the research protocol and is not contained in this bundle.
+
 **DEBUG RESULTS ONLY — reduced data, not research evidence. The full ten-seed experiment has NOT been completed by this quick run.**
 
 † One seed: standard deviation is undefined; values are single-seed observations.
@@ -113,17 +117,17 @@ Compare Replay-300, Replay-64KiB and MNEMA using both auxiliary content and tota
 
 The original technology cards and instrument are unchanged. Native inference counters are projected using the ASIC 45 nm card. The table reports projection per image over the same evaluation workload. MNEMA native training counts/projections are retained separately in raw records. New baseline training, EWC Fisher estimation and buffer work lack comparable complete instrumentation, so **no cross-method training-energy ranking is reported**. Native counters also omit some arithmetic, use simplifying dtype/traffic assumptions and exclude checkpoint restoration. They are not exhaustive end-to-end energy or evidence of physical hardware efficiency. Wall-clock seconds are measured on this host (including integrity checks), not energy. Raw records report SGD updates, replay draws and Fisher sample counts.
 
-## 9. Where MNEMA Wins
+## 9. Favorable debug observations
 
 No research advantage is established by this debug run. Observed debug comparisons only: Final accuracy above Naive MLP by 51.80 percentage points. Final accuracy above Replay-300 (Research) by 5.80 percentage points. Final accuracy above Replay-64KiB by 4.20 percentage points. Final accuracy above EWC by 51.60 percentage points. No significance is implied. Memory and projected-operation observations must be read with the caveats above.
 
-## 10. Where MNEMA Loses
+## 10. Unfavorable debug observations
 
 These are debugging observations, not full-data conclusions: Final accuracy at or below DER++-300 by 0.80 percentage points. Its total resident array allocation is 4,391,100 bytes, and its configured FastStore limit is not accurately enforced against actual payload.
 
 ## 11. Main Interpretation
 
-The implementation and output pipeline have been exercised, but this quick run cannot answer the full research question. Run the ten-seed full protocol on the stronger computer before making research claims.
+The implementation and output pipeline have been exercised, but this quick run cannot answer the full research question. Interpret full-data findings only from a separately identified, validated full-data bundle; this report remains a debug record even when another experiment has completed.
 
 ## 12. Limitations
 
@@ -131,7 +135,7 @@ Only MNIST, one fixed task order, simple MLP baselines, limited architecture sca
 
 ## 13. Next Experiment
 
-After completing full Split-MNIST, use the same declared protocol on Split-FashionMNIST to test whether the trade-off extends to less easily separated images. Do not implement it as part of this benchmark.
+A possible follow-up is Split-FashionMNIST under a separately declared protocol to test whether the trade-off extends beyond MNIST. This repository does not implement that follow-up benchmark.
 
 ## Reproduction and artifacts
 

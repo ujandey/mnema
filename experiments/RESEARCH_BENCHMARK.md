@@ -1,107 +1,140 @@
-# Research benchmark operation
+# Research benchmark runbook
 
-MNEMA and the historical benchmark are frozen. Development validation uses only
-quick mode. The completed full-data report and cloud execution guide are documented in [docs/RESEARCH_BENCHMARK.md](../docs/RESEARCH_BENCHMARK.md).
+[Experiment catalog](README.md) · [Protocol and results](../docs/RESEARCH_BENCHMARK.md) · [Troubleshooting](../docs/TROUBLESHOOTING.md)
 
-## Setup on the stronger computer
+Run all commands from the repository root using the [Python 3.11.7 research environment](../docs/GETTING_STARTED.md). Select a workload explicitly: omitting both `--mode` and `--quick` selects **full data and ten seeds**.
 
-Use Python 3.11 and the tested standalone dependency pins (the historical
-`pyproject.toml` currently requests Python 3.14 and newer dependency versions):
-
-```bash
-python -m pip install -r experiments/research_requirements.txt
-python -m unittest discover -s tests -p test_research_benchmark.py -v
-```
-
-Run from the repository root. No PyTorch or additional plotting dependencies are
-needed. Original MNIST gzip files in `data/` are reused and checked against their
-standard checksums; missing files are downloaded using the existing loader helper.
-
-## Development only
+## Quick run
 
 ```bash
 python experiments/run_research_benchmark.py --quick
-python experiments/validate_research_benchmark.py results/research_benchmark/quick --reproduce
 ```
 
-Defaults: one seed, 100 training and 100 test images per task, all six methods,
-unchanged MNEMA dimensions. Quick results are explicitly DEBUG ONLY; one-seed SD
-is undefined. Models and seeds run sequentially. Images occupy about 55 MB as
-uint8 arrays; no full normalized dataset copies or per-image model deepcopies.
+Defaults: seed 0, all six methods, 100 training / 100 test images per task. Output is `results/research_benchmark/quick/`. This is a pipeline check with undefined single-seed SD, not a research comparison. Dataset files are downloaded if missing and verified before use.
 
-## Full experiment — stronger computer only
+## Full run
 
 ```bash
 python experiments/run_research_benchmark.py --mode full --seeds 10
 ```
 
-Output: `results/research_benchmark/full/`. Repeat the exact command to resume.
-Every completed seed × method result is atomically persisted and validated before
-reuse. An interrupted pair restarts; model state is not saved mid-task. There is
-no concurrent process/seed execution; do not run multiple runners into one output
-directory. Source, settings, dataset and software versions must match on resume.
+Runs all 60 pairs sequentially and writes `results/research_benchmark/full/`. The full protocol uses all 60,000 training and 10,000 test images; it can take substantial CPU time, particularly for MNEMA and EWC. Runtime depends on the host. There is no local process or seed parallelism in this command.
 
-To archive the previous full directory and start all pairs again:
+## Resume and fresh runs
+
+Repeat the same all-method command to resume. The runner validates completed pairs and skips valid results. An interrupted pair restarts from its beginning; there are no persisted mid-task model checkpoints. Do not run two processes into the same mode directory.
+
+Resume requires matching configuration, source hashes, data, and environment. A mismatch produces `Existing configuration/source/environment differs`. The checked-in debug bundle may differ from a fresh local environment or the current source revision.
+
+To deliberately archive the existing quick bundle and start a new quick experiment:
+
+```bash
+python experiments/run_research_benchmark.py --quick --force
+```
+
+For a new full experiment:
 
 ```bash
 python experiments/run_research_benchmark.py --mode full --seeds 10 --force
 ```
 
-`--force` only moves the selected mode directory to a timestamped sibling inside
-`results/research_benchmark/`; historical outputs and the other mode are untouched.
-Full data is the default without `--quick`, so explicitly select quick mode on
-the development machine.
+For all-method runs, `--force` moves the selected mode directory to a timestamped sibling such as `quick_archive_<timestamp>` before rerunning every pair. Other modes and historical output files remain in place. Archives are ignored by Git; preserve any evidence you need separately.
 
-EWC defaults to lambda=100 and full empirical-Fisher estimation over each of the
-first four task training sets, with no weight updates during estimation. Use
-`--fisher-samples N` for a declared uniform subset if compute requires it. This is
-an extra training-data read, not an extra optimization epoch. DER++ defaults to
-alpha=beta=0.5. These settings are fixed, not tuned against the final test set.
-
-## Regenerate artifacts
+## One seed-method pair
 
 ```bash
-python experiments/plot_research_benchmark.py results/research_benchmark/full
-python experiments/report_research_benchmark.py results/research_benchmark/full --update-readme
+python experiments/run_research_benchmark.py --mode full --seed 0 --method mnema
+python experiments/run_research_benchmark.py --mode full --seed 0 --method derpp300
+```
+
+Run these independently for the pair you need. `--seed` and `--method` are required together. `--seed` selects an index, whereas `--seeds N` defines the configured range `0,...,N-1`. Full mode defaults to a range of ten seeds; quick mode defaults to a range of one.
+
+Pair output uses `results/github-actions/seed_<seed>/<canonical-slug>/`, even when run locally or with quick data. `derpp` resolves to the canonical `derpp300` directory. Pair runs write configuration, raw result, and completion status; they do not create a complete report, worker metadata, or saved index bundle.
+
+**Pair mode always reruns and replaces that pair's files.** It does not use all-method resume or the `--force` archive branch. Avoid simultaneous runs of the same pair or alternating quick/full pair runs into the same path without preserving earlier results.
+
+## CLI reference
+
+```bash
+python experiments/run_research_benchmark.py --help
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--mode quick\|full` | `full` | Dataset scope |
+| `--quick` | Off | Alias for `--mode quick`; conflicts with `--mode full` |
+| `--seeds N` | Quick: 1; full: 10 | Seed range starting at zero |
+| `--seed N --method SLUG` | Unset | Run just one pair; seed must be in the configured range |
+| `--quick-train N` | 100 | Training images per task in quick mode; 1-500 |
+| `--quick-test N` | 100 | Test images per task in quick mode; 1-200 |
+| `--lr X` | 0.01 | Positive finite dense-baseline learning rate |
+| `--ewc-lambda X` | 100.0 | Nonnegative finite EWC penalty coefficient |
+| `--fisher-samples N` | 0 | EWC samples per task; 0 means all; no final-task Fisher |
+| `--der-alpha X` | 0.5 | Nonnegative finite logit-matching weight |
+| `--der-beta X` | 0.5 | Nonnegative finite replay-label CE weight |
+| `--force` | Off | Archive and restart the selected all-method mode directory |
+
+Methods: `naive`, `replay300`, `replay64kib`, `ewc`, `derpp300`, `mnema`. Main-runner aliases: `replay64k`, `derpp`. Changing coefficients, sample limits, or seed coverage defines a different experiment; label it accordingly.
+
+## Validate saved results
+
+```bash
+python experiments/validate_research_benchmark.py results/research_benchmark/quick
+python experiments/validate_research_benchmark.py results/research_benchmark/quick --reproduce
+```
+
+The first command checks saved artifact consistency and writes `validation.json`. The second additionally recomputes quick results. Both require compatible source and MNIST data. Full saved-artifact validation is available without automatic retraining:
+
+```bash
 python experiments/validate_research_benchmark.py results/research_benchmark/full
 ```
 
-The report generator creates the table and README fragment directly from JSON;
-`--update-readme` explicitly installs that generated section. Use the quick path
-for debug artifact regeneration. Validation never automatically repeats full
-runs, even when `--reproduce` is requested (it rejects that combination).
+`--reproduce` is rejected for full runs. A validator failure from changed source is a provenance mismatch, not permission to bypass hashes or overwrite the saved configuration. Use a checkout matching the record to audit old evidence.
 
-## Interpretation and caveats
+The [EWC diagnostic](check_ewc_sanity.py) checks the saved quick run's Fisher, snapshots, and actual penalty updates:
 
-- Five tasks: 01 → 23 → 45 → 67 → 89; all 60,000 training and 10,000 test images
-  in full mode. Every task stream is shuffled once per seed and shared by methods.
-- All predictions cover 0–9; test labels are used only after prediction for scoring.
-- Each test image starts at the same post-training MNEMA checkpoint, including
-  its membrane state. Mutable inference state is restored in a `finally` block.
-  Full attribute and RNG hashes check isolation; reversed test-order predictions
-  must agree image by image. No model source changes implement this protocol.
-- Every retention cell is measured. Forgetting for old task j uses its best
-  post-learning, pre-final score minus its final score; negative values are valid.
-- Reservoir Replay-300 (Research) differs intentionally from historical random-
-  replacement replay. The historical baseline module remains unchanged.
-- Replay-64KiB stores raw uint8 pixels and includes buffer counters in its strict
-  65,536-byte array-payload budget. It is not exactly memory matched to MNEMA.
-- FastStore counts 25 bytes/row while its active array payload uses 28. Actual
-  usage, exceedances and post-sample peaks are reported without fixing eviction.
-- Model/adaptive, frozen scaffold, active auxiliary content, allocated auxiliary
-  arrays and total resident array payload are distinct. Allocated capacity and
-  active content are not added twice. Python/runtime/PRNG overhead, dataset and
-  scratch buffers are outside the declared array-payload accounting boundary.
-- Native projected inference energy is partial, not measured physical energy.
-  New baseline training has no comparable energy instrumentation. Do not rank
-  complete training energy using these results.
+```bash
+python experiments/check_ewc_sanity.py results/research_benchmark/quick
+```
 
-## Audit record
+It writes `EWC_SANITY_CHECK.md` and `ewc_sanity.json`. Functional checks do not establish optimal hyperparameters or repair a poor accuracy result.
 
-Historical experiment: 80 training / 50 test examples per task, one unshuffled
-pass, ten output classes, Naive/Replay/MNEMA, seed 0 with separate ten-seed small
-variance script. Historical evaluation mutated MNEMA state; FastStore undercounted
-payload; missing future retention cells were encoded as zero; forgetting included
-the final checkpoint in its maximum. Historical source and results are preserved.
-The new protocol does not support direct before/after accuracy attribution to
-MNEMA, since data volume, ordering and evaluation semantics differ.
+## Regenerate reports and plots
+
+Given a completed compatible bundle:
+
+```bash
+python experiments/plot_research_benchmark.py results/research_benchmark/quick
+python experiments/report_research_benchmark.py results/research_benchmark/quick
+```
+
+Use the `full` directory for full-data outputs. Plotting writes PNG/PDF figures. Reporting writes `BENCHMARK_REPORT.md`, summary Markdown/CSV, and `summaries/README_SECTION.md` from saved JSON; it does not retrain models or validate the run for you.
+
+To replace the marked research block in the root README as well:
+
+```bash
+python experiments/report_research_benchmark.py results/research_benchmark/quick --update-readme
+```
+
+Inspect the resulting diff before retaining it. Generated README fragments use repository-root-relative links and assume the conventional `results/research_benchmark/<mode>/` layout. Regenerating from an external or distributed directory requires checking those links. Keep the start/end markers in the root README intact.
+
+Generated files can contain legacy wording. The curated [artifact guide](../results/README.md) and [protocol](../docs/RESEARCH_BENCHMARK.md) explain the accounting boundaries and corrections; editorial notes added to generated snapshots can be overwritten by regeneration.
+
+## Distributed helper
+
+For controlled workers sharing a prepared configuration, the helper supplies a consistent raw/worker layout. This quick example runs one shard; `collect` requires all six canonical methods for quick mode.
+
+```bash
+python experiments/research_actions.py prepare --mode quick --directory .benchmark-actions/prepared-quick
+python experiments/research_actions.py run --directory .benchmark-actions/prepared-quick --seed 0 --method naive --output .benchmark-actions/shards-quick/seed_0_naive
+```
+
+Run the `run` command for each remaining canonical method, with a distinct output directory per pair. After all six succeed:
+
+```bash
+python experiments/research_actions.py collect --directory .benchmark-actions/prepared-quick --shards .benchmark-actions/shards-quick
+```
+
+Preparation requires a fresh directory. Each worker needs the same source, pinned software, dataset, and prepared configuration/indices. Full preparation expects all 60 pairs. Duplicate, missing, mismatched, or corrupted results fail collection; do not merge independent configurations.
+
+For the checked-in GitHub workflows, including the current DER++ directory mismatch, see [cloud execution](../docs/RESEARCH_BENCHMARK.md#github-actions).

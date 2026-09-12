@@ -1,3 +1,9 @@
+# Debug benchmark summary
+
+[Detailed report](../BENCHMARK_REPORT.md) · [Summary JSON](summary.json) · [Artifact guide](../../../README.md)
+
+This generated table describes the saved quick run only. Numerical values are unchanged; regeneration can overwrite this editorial context. Memory is array payload and energy is a partial native projection. Auxiliary content and allocated auxiliary memory are alternative views: total resident arrays = adaptive + fixed + allocated auxiliary.
+
 **DEBUG RESULTS ONLY — reduced data, not research evidence. The full ten-seed experiment has NOT been completed by this quick run.**
 
 † One seed: standard deviation is undefined; values are single-seed observations.

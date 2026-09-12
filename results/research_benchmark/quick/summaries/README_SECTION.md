@@ -1,5 +1,9 @@
 ## Research Benchmark
 
+<!-- Generated root-README fragment. Links below resolve from the repository root,
+     not from this summaries directory. Open ../BENCHMARK_REPORT.md for a standalone
+     report. Regeneration replaces this file; see results/README.md for context. -->
+
 **DEBUG RESULTS ONLY — reduced data, not research evidence. The full ten-seed experiment has NOT been completed by this quick run.**
 
 † One seed: standard deviation is undefined; values are single-seed observations.
