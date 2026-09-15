@@ -11,6 +11,8 @@ MNEMA is a NumPy research prototype for learning from a sequence of labeled exam
 
 The implementation runs on CPU. It includes six-method Split-MNIST experiments, checkpoint-isolated evaluation, operation counters, and reproducible result artifacts. It does not require pretrained weights or a GPU.
 
+**Authors:** [Ujan Dey](https://github.com/ujandey) and Swapnil · [Authorship](AUTHORS.md)
+
 **Licensed under the [Apache License 2.0](LICENSE).** Copyright (c) 2026 COGNX.
 
 [Full technical report (PDF)](docs/mnema.pdf) · [Benchmark report](results/research_benchmark/full/BENCHMARK_REPORT.md) · [Get started](docs/GETTING_STARTED.md) · [Documentation index](docs/README.md)
@@ -29,11 +31,11 @@ The implementation runs on CPU. It includes six-method Split-MNIST experiments, 
 
 ## Quick start
 
-Run commands from the repository root. For research, use **Python 3.11.7** with the standalone pinned dependencies. The package metadata and `uv.lock` describe a separate Python 3.14 environment; see [environment choices](docs/GETTING_STARTED.md#choose-an-environment).
+Run commands from the repository root using **Python 3.11.7**. The package metadata and research dependencies now use the same tested environment; see [environment setup](docs/GETTING_STARTED.md#choose-an-environment).
 
 ```bash
-git clone https://github.com/ujandey/COGNX_2.git
-cd COGNX_2
+git clone https://github.com/ujandey/mnema.git
+cd mnema
 python -m venv .venv
 ```
 
@@ -120,7 +122,7 @@ python experiments/run_research_benchmark.py --mode full --seeds 10
 
 The included full directory contains the supplied evidence, so a mismatched new run will refuse to resume it. Follow the [runbook](experiments/RESEARCH_BENCHMARK.md) to preserve or deliberately archive that bundle before starting a fresh run. Completed pairs can be resumed only with matching configuration; an interrupted pair restarts from the beginning.
 
-Manual GitHub Actions workflows are also included. Read the [cloud execution guide](docs/RESEARCH_BENCHMARK.md#github-actions) before dispatching: it documents a current DER++ output-path mismatch in the workflow YAML.
+A lightweight CI workflow runs the research tests and calibration check on pushes and pull requests. The full benchmark workflows remain manual because they are computationally expensive; see the [cloud execution guide](docs/RESEARCH_BENCHMARK.md#github-actions).
 
 ## Repository map
 
@@ -136,7 +138,7 @@ Manual GitHub Actions workflows are also included. Read the [cloud execution gui
 | [docs/mnema.pdf](docs/mnema.pdf) | Full MNEMA technical report |
 | [docs/](docs/README.md) | Setup, architecture, API, protocol, and troubleshooting |
 
-Use the root `main.py` for historical benchmarks and plotting. The installed `mnema-arch` command currently prints a greeting; it is not the benchmark CLI.
+Use the root `main.py` for historical benchmarks and plotting. Use the scripts under `experiments/` for the reproducible research protocol.
 
 ## License
 

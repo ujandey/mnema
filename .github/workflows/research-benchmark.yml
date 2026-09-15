@@ -101,9 +101,7 @@ jobs:
             --mode full \
             --seed "$SEED" \
             --method "$METHOD" 2>&1 | tee ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log"
-          OUTPUT_METHOD="$METHOD"
-          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
-          PAIR="results/github-actions/seed_${SEED}/${OUTPUT_METHOD}"
+          PAIR="results/github-actions/seed_${SEED}/${METHOD}"
           mkdir -p .benchmark-actions/shard/raw .benchmark-actions/shard/workers
           cp "$PAIR/raw/seed_${SEED}_${METHOD}.json" \
              ".benchmark-actions/shard/raw/seed_${SEED}_${METHOD}.json"
@@ -143,7 +141,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: research-seed-${{ matrix.seed }}-${{ matrix.method == 'derpp300' && 'derpp' || matrix.method }}
+          name: research-seed-${{ matrix.seed }}-${{ matrix.method }}
           path: |
             .benchmark-actions/shard/
             results/github-actions/seed_${{ matrix.seed }}/

@@ -8,10 +8,8 @@ Start from the repository root. Capture the exact command and error before chang
 
 | Symptom | Cause and next step |
 | --- | --- |
-| Python 3.11 fails `pip install .` | Package metadata requires >=3.14. For research, install `experiments/research_requirements.txt` and run scripts directly. |
-| `uv sync` selects Python 3.14 | `.python-version` and `pyproject.toml` define the package environment. Use the standalone research environment for pinned benchmark reproduction. |
+| `pip install .` selects unexpected versions | Use Python 3.11.7 and install `experiments/research_requirements.txt` for the exact tested research environment. |
 | `ModuleNotFoundError` for NumPy, Matplotlib, or YAML | Install research requirements using the same interpreter that runs the script: `python -m pip install -r experiments/research_requirements.txt`. |
-| `mnema-arch` only prints a greeting | The installed console entry point is a placeholder. Use `python main.py` or the research runner directly. |
 | PowerShell rejects `Activate.ps1` | Invoke `.\.venv\Scripts\python.exe` directly; activation is optional. |
 | Technology card not found | The path is resolved from the working directory. Change to the repository root. |
 
@@ -59,7 +57,7 @@ EWC Fisher estimation and MNEMA consolidation can add substantial work. All-meth
 | A pair directory has no report | Main-runner pair mode writes raw/config/status only. Use an all-method bundle or the distributed prepare/run/collect path for complete reports. |
 | Full report or plots missing | The complete bundle belongs under `results/research_benchmark/full/`. Verify that the checkout includes all imported artifacts listed in [IMPORT_MANIFEST.json](../results/research_benchmark/full/IMPORT_MANIFEST.json); do not substitute quick figures. |
 | Collector reports missing or duplicate results | It requires exactly the configured seed-method set and matching worker records. Restore the missing shard or remove accidental duplicate inputs from the collection set after inspecting them. |
-| GitHub DER++ job cannot copy its raw file | The checked-in YAML looks in `derpp/`, while the runner writes `derpp300/`. See the [known workflow mismatch](RESEARCH_BENCHMARK.md#github-actions). |
+| A benchmark pair artifact is missing | Inspect that seed-method job and its uploaded log; aggregation requires every configured pair. |
 | Full matrix has no final artifact after a failed job | Aggregation requires successful prerequisites and all expected results. Diagnose the failed pair before retrying. |
 | README fragment images do not render inside `summaries/` | The fragment is designed for embedding in the root README. Open the sibling report or apply it through the documented generator command. |
 | A regenerated table lost editorial context | Generated files are replaced by scripts. Keep the [result guide](../results/README.md) alongside exports. |

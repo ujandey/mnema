@@ -134,7 +134,7 @@ All supporting evidence is available in the [full bundle](../results/research_be
 
 ## GitHub Actions
 
-The completed bundle records a GitHub Actions execution at its original source revision. The current included workflows are manual-only (`workflow_dispatch`); ordinary pushes do not launch benchmark jobs. The description below refers to today's checked-in YAML, not a newly executed cloud run. The current path mismatch does not invalidate the separately recorded successful run.
+The completed bundle records a GitHub Actions execution at its original source revision. A lightweight CI workflow now runs tests and calibration on ordinary pushes and pull requests. The computationally expensive research workflows remain manual (`workflow_dispatch`).
 
 | Workflow | Selection | Intended work |
 | --- | --- | --- |
@@ -144,9 +144,7 @@ The completed bundle records a GitHub Actions execution at its original source r
 
 The matrix sets `fail-fast: false`, `max-parallel: 6`, and a 350-minute benchmark-job timeout. Preparation installs the research pins, verifies MNIST, and uploads shared inputs. A failed pair does not cancel other pair jobs; successful aggregation still requires the expected inputs.
 
-**Known workflow path mismatch:** both YAML files translate the `derpp300` directory to `derpp`, but the current Python pair runner writes to `results/github-actions/seed_<seed>/derpp300/`. The matrix then tries to copy from the wrong directory, preventing successful DER++ artifact assembly and full aggregation as written. The pair workflow's log destination is also affected. This documentation revision does not change workflow execution. Align the YAML paths with the runner before relying on the full cloud matrix; the local canonical pair command in the runbook writes to the correct path.
-
-When operating an aligned workflow, open the repository's **Actions** tab, choose the workflow, and select **Run workflow** on the intended source revision. Pair artifact names follow `research-seed-<seed>-<method>`; the YAML currently names DER++ artifacts with `derpp`. The full aggregation artifact is `research-benchmark-final`. Configured retention is 30 days, so download needed bundles before expiry.
+To operate a benchmark workflow, open the repository's **Actions** tab, choose the workflow, and select **Run workflow** on the intended source revision. Pair artifact names follow `research-seed-<seed>-<method>` using canonical method slugs such as `derpp300`. The full aggregation artifact is `research-benchmark-final`. Configured retention is 30 days, so download needed bundles before expiry.
 
 The distributed [research_actions.py](../experiments/research_actions.py) helper also provides `prepare`, `run`, and `collect` commands. Its collector requires one unique raw result and matching worker record per expected pair, and verifies source, software, dataset, configuration, and indices. Pair output from the main runner alone is not a complete distributed shard. See the [runbook](../experiments/RESEARCH_BENCHMARK.md#distributed-helper) for a compatible example.
 

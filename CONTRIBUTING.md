@@ -6,14 +6,14 @@ Contributions are welcome under the [Apache License, Version 2.0](LICENSE). Unle
 
 ## Development setup
 
-Use the [standalone research environment](docs/GETTING_STARTED.md) for protocol work. Run scripts from the repository root and keep the Python 3.11 research pins separate from the Python 3.14 package environment.
+Use the [Python 3.11.7 research environment](docs/GETTING_STARTED.md) for protocol work. The package metadata and pinned research requirements use the same dependency versions.
 
 ```bash
 python -m pip install -r experiments/research_requirements.txt
 python -m unittest discover -s tests -p "test_research*.py" -v
 ```
 
-The tests use small synthetic fixtures and temporary artifacts. The repository does not currently define a separate lint/type-check command or an automatic push-triggered test workflow; the research workflow runs these tests during manual preparation.
+The tests use small synthetic fixtures and temporary artifacts. The lightweight CI workflow runs the research tests and calibration check on every push and pull request; full benchmark workflows remain manual.
 
 ## Scope a change
 

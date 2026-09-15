@@ -90,15 +90,13 @@ jobs:
           SEED: ${{ inputs.seed }}
           METHOD: ${{ inputs.method }}
         run: |
-          OUTPUT_METHOD="$METHOD"
-          if [ "$METHOD" = "derpp300" ]; then OUTPUT_METHOD="derpp"; fi
-          mkdir -p "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/logs"
+          mkdir -p "results/github-actions/seed_${SEED}/${METHOD}/logs"
           cp ".benchmark-actions/logs/seed_${SEED}_${METHOD}.log" \
-            "results/github-actions/seed_${SEED}/${OUTPUT_METHOD}/logs/"
+            "results/github-actions/seed_${SEED}/${METHOD}/logs/"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: research-seed-${{ inputs.seed }}-${{ inputs.method == 'derpp300' && 'derpp' || inputs.method }}
+          name: research-seed-${{ inputs.seed }}-${{ inputs.method }}
           path: results/github-actions/seed_${{ inputs.seed }}/
           if-no-files-found: warn
           retention-days: 30

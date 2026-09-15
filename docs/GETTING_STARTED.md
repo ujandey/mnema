@@ -10,22 +10,17 @@ You do not need to install dependencies or rerun training to inspect the [full r
 
 ## Choose an environment
 
-The repository currently has two dependency definitions. Keep them separate.
+The repository uses one supported environment: **Python 3.11.7** with NumPy 2.2.6, Matplotlib 3.10.3, and PyYAML 6.0.2. The exact research pins live in [research_requirements.txt](../experiments/research_requirements.txt), and [pyproject.toml](../pyproject.toml) uses the same versions.
 
-| Environment | Python | Dependencies | Intended use |
-| --- | --- | --- | --- |
-| Research | Tested with **3.11.7** | NumPy 2.2.6, Matplotlib 3.10.3, PyYAML 6.0.2, pinned in [research_requirements.txt](../experiments/research_requirements.txt) | Benchmark reproduction, unit tests, non-GUI diagnostics |
-| Package | **3.14**, selected by [.python-version](../.python-version); metadata requires >=3.14 | NumPy, Matplotlib, and PyYAML via [pyproject.toml](../pyproject.toml) and [uv.lock](../uv.lock) | Existing `uv` workflow for the implementation, historical benchmarks, and plotting |
-
-For comparisons with the supplied full-data record, use the research environment. `uv sync` follows the package metadata; it does not install the research pins. A Python 3.11 environment cannot install the project as a package under the current metadata, but can run its scripts directly from the checkout.
+Use the pinned requirements for benchmark reproduction and CI. The package metadata accepts Python 3.11 only so an accidental interpreter upgrade cannot silently change the recorded numerical environment.
 
 No PyTorch, CUDA, Brian2, pretrained checkpoint, or neuromorphic board is needed. Dataset access requires the four MNIST gzip files or network access to download them. The tests and calibration below work without MNIST.
 
 ## Get the source
 
 ```bash
-git clone https://github.com/ujandey/COGNX_2.git
-cd COGNX_2
+git clone https://github.com/ujandey/mnema.git
+cd mnema
 ```
 
 If you already have a checkout, use it directly. The project is licensed under the [Apache License 2.0](../LICENSE).

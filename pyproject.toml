@@ -1,22 +1,20 @@
 [project]
 name = "mnema-arch"
 version = "0.1.0"
-description = "MNEMA: memory-native, event-driven architecture for bounded continual learning at the edge."
+description = "MNEMA: memory-native, event-driven architecture for continual learning research."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Swapnil", email = "swapnil7x@gmail.com" }
+    { name = "Ujan Dey", email = "ujandey007@gmail.com" },
+    { name = "Swapnil", email = "swapnil7x@gmail.com" },
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.11,<3.12"
 dependencies = [
-    "matplotlib>=3.11.1",
-    "numpy>=2.5.2",
-    "pyyaml>=6.0.3",
+    "numpy==2.2.6",
+    "matplotlib==3.10.3",
+    "PyYAML==6.0.2",
 ]
-
-[project.scripts]
-mnema-arch = "mnema_arch:main"
 
 [build-system]
 requires = ["uv_build>=0.12.6,<0.13.0"]
