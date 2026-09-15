@@ -19,3 +19,19 @@ COGNX_PITCH_PLAYBOOK.md
 MNEMA_PROTOTYPE_DEFENSE_GUIDE.md
 MNEMA_TECHNICAL_DEFENSE_DOSSIER.md
 
+# Temporary LaTeX build files (keep report sources and PDFs tracked).
+/docs/technical_report/*.aux
+/docs/technical_report/*.bbl
+/docs/technical_report/*.blg
+/docs/technical_report/*.log
+/docs/technical_report/*.out
+/docs/technical_report/*.toc
+/docs/technical_report/*.lof
+/docs/technical_report/*.lot
+/docs/technical_report/*.fls
+/docs/technical_report/*.fdb_latexmk
+/docs/technical_report/*.synctex.gz
+/docs/technical_report/*.synctex(busy)
+/docs/technical_report/*.xdv
+/docs/technical_report/*.dvi
+

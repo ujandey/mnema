@@ -7,15 +7,18 @@ This is a technical report, **not a peer-reviewed paper**. All MNEMA results com
 
 ## Files and layout
 
+- [Compiled report](../mnema.pdf): the reader-ready PDF linked from the repository and documentation front pages.
 - [main.tex](main.tex): manuscript, equations, three tables, and an inline TikZ architecture diagram.
 - [references.bib](references.bib): four original academic references and two repository references.
 - [figures/retention_matrices.pdf](figures/retention_matrices.pdf): unchanged full-benchmark retention figure.
 - [figures/accuracy_vs_memory.pdf](figures/accuracy_vs_memory.pdf): unchanged full-benchmark auxiliary-memory figure.
 - [README.md](README.md): build instructions, evidence map, audit decisions, and validation status.
 
-The manuscript targets **approximately 10 A4 pages, including the title page and references**. It uses one column, 10-point Latin Modern type, 23 mm margins, black body text, numbered sections, and page numbers after the title page. Explicit page breaks group the title, introduction, architecture, protocol, results, memory, discussion, limitations/future work/conclusion, and reproducibility/references. The original scientific plots retain their source colors. The architecture is a vector TikZ drawing, not an AI-generated illustration.
+The manuscript uses one column, 10-point Latin Modern type, 23 mm margins, black body text, numbered sections, and page numbers after the title page. The reader-reviewed build had **13 A4 pages, including the title page and references**; that length is acceptable. Explicit page breaks group the major topics. The revised protocol uses tighter local paragraph/display spacing and condensed prose to keep its metrics on page 5 and start Results on page 6. The original scientific plots retain their source colors. The architecture is a vector TikZ drawing, not an AI-generated illustration.
 
-The page count is an **estimate, not a compiled measurement**. Source checks cannot establish final pagination or rule out typesetting warnings.
+The revised pagination has **not been compiled locally**. Source checks cannot establish the new page count or rule out typesetting warnings. On recompilation, verify that Section 4 starts on page 6 and that no short metrics-only page remains.
+
+The cover now identifies the series once as “COGNX Research · Technical Report 001”, with COGNX Research retained as the authors' affiliation. Figure 2 and its caption are unchanged. Figure 3 has a small note directly above the chart, “x-axis is not total resident memory”, inside the same float so the note stays with the plot. Appendix A keeps the benchmark command, recorded environment and source commit, and the essential reproduction boundary; detailed provenance remains in this README.
 
 ## Compile locally or in Overleaf
 
@@ -36,7 +39,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
 For Overleaf, upload `main.tex`, `references.bib`, and the `figures/` directory together. Select `main.tex` as the main document and pdfLaTeX as the compiler. Overleaf's build should run BibTeX automatically. All required packages are standard TeX Live packages; there are no custom fonts, external scripts, shell-escape requirements, or image-generation dependencies. The bibliography uses `natbib` and `unsrtnat`, not Biber.
 
-**Local build status:** no `pdflatex`, `xelatex`, `lualatex`, `latexmk`, `bibtex`, or `tectonic` executable was found on PATH; common local TeX installation directories were also absent. Compilation was therefore not attempted and no compiled report PDF is supplied. Static source checks passed, but compilation and final visual inspection remain unverified. After compiling, inspect `main.log` for undefined references/citations and overfull boxes, and verify figure placement and the final page count.
+**Local build status:** no `pdflatex`, `xelatex`, `lualatex`, `latexmk`, `bibtex`, or `tectonic` executable was found on PATH; common local TeX installation directories were also absent. Compilation was therefore not attempted in this environment. A [compiled report PDF](../mnema.pdf) is supplied, but the static source checks documented here do not replace a clean local compilation. After compiling, inspect `main.log` for undefined references/citations and overfull boxes, and verify figure placement and the final page count.
 
 ## Empirical authority and source audit
 

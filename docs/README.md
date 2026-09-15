@@ -2,6 +2,11 @@
 
 [Project overview](../README.md)
 
+> [!IMPORTANT]
+> **[Read the full MNEMA technical report (PDF)](mnema.pdf)**
+>
+> The complete architecture, methodology, benchmark findings, limitations, and reproducibility record.
+
 This documentation describes the code and artifacts in this checkout. Start with the task you need to complete; experiment settings and saved JSON take precedence over narrative summaries when reproducing a run.
 
 **Full benchmark complete:** start with the [full-data report and evidence](../results/research_benchmark/full/README.md), covering all 60 runs across six methods and ten seeds. The bundle includes the original report, plots, raw records, validation, and an additional import audit.
@@ -10,6 +15,7 @@ This documentation describes the code and artifacts in this checkout. Start with
 
 | Guide | What you will learn |
 | --- | --- |
+| [Full technical report (PDF)](mnema.pdf) | Read the complete MNEMA report in one document |
 | [Getting started](GETTING_STARTED.md) | Choose the correct Python environment, install dependencies, verify setup, and run a debug experiment |
 | [Architecture](ARCHITECTURE.md) | Follow one sample through the model, understand learning and inference state, and inspect implementation limits |
 | [Python API](API.md) | Construct a model, train one example, inspect predictions, and use counters correctly |

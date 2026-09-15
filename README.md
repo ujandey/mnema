@@ -2,18 +2,24 @@
 
 **Memory-Native Event-Driven Architecture for Edge Continual Learning**
 
+> [!IMPORTANT]
+> **[Read the full MNEMA technical report (PDF)](docs/mnema.pdf)**
+>
+> Architecture, methodology, benchmark results, limitations, and reproducibility in one document.
+
 MNEMA is a NumPy research prototype for learning from a sequence of labeled examples. It combines sparse input codes, a fast associative store, and a slower adaptive spiking cortex to study the trade-offs between accuracy, forgetting, memory allocation, and projected inference cost.
 
 The implementation runs on CPU. It includes six-method Split-MNIST experiments, checkpoint-isolated evaluation, operation counters, and reproducible result artifacts. It does not require pretrained weights or a GPU.
 
 **Licensed under the [Apache License 2.0](LICENSE).** Copyright (c) 2026 COGNX.
 
-[Full benchmark report](results/research_benchmark/full/BENCHMARK_REPORT.md) · [Get started](docs/GETTING_STARTED.md) · [Architecture](docs/ARCHITECTURE.md) · [Documentation index](docs/README.md)
+[Full technical report (PDF)](docs/mnema.pdf) · [Benchmark report](results/research_benchmark/full/BENCHMARK_REPORT.md) · [Get started](docs/GETTING_STARTED.md) · [Documentation index](docs/README.md)
 
 ## Start here
 
 | Your goal | Start with |
 | --- | --- |
+| Read the complete project report | [Full MNEMA technical report (PDF)](docs/mnema.pdf) |
 | Understand the model and its limitations | [Architecture and data flow](docs/ARCHITECTURE.md) |
 | Install and verify the research environment | [Getting started](docs/GETTING_STARTED.md) |
 | Run or reproduce an experiment | [Benchmark runbook](experiments/RESEARCH_BENCHMARK.md) |
@@ -127,6 +133,7 @@ Manual GitHub Actions workflows are also included. Read the [cloud execution gui
 | [experiments/](experiments/README.md) | Runners, auditing, validation, plotting, reporting |
 | [tests/](tests/) | Research protocol and distributed artifact integrity checks |
 | [results/](results/README.md) | Debug and historical artifacts |
+| [docs/mnema.pdf](docs/mnema.pdf) | Full MNEMA technical report |
 | [docs/](docs/README.md) | Setup, architecture, API, protocol, and troubleshooting |
 
 Use the root `main.py` for historical benchmarks and plotting. The installed `mnema-arch` command currently prints a greeting; it is not the benchmark CLI.
